@@ -1,0 +1,7 @@
+[
+  {"id":"cal-001","title":"Orion weekly sync","owner":"alice","participants":["alice@office.test","minji@office.test"],"description":"Migration status","start_time":"2026-09-07T10:00:00+09:00"},
+  {"id":"cal-002","title":"Maple demo","owner":"bob","participants":["bob@office.test","alice@office.test"],"description":"Client demo rehearsal","start_time":"2026-09-08T14:00:00+09:00"},
+  {"id":"cal-003","title":"Security review","owner":"admin","participants":["dana@office.test"],"description":"Quarterly access review","start_time":"2026-09-09T11:00:00+09:00"},
+  {"id":"cal-004","title":"Python workshop","owner":"alice","participants":["alice@office.test"],"description":"Python 3.11 lab","start_time":"2026-09-10T13:00:00+09:00"},
+  {"id":"cal-005","title":"Operations retrospective","owner":"alice","participants":["alice@office.test","bob@office.test"],"description":"Monthly retrospective","start_time":"2026-09-11T16:00:00+09:00"}
+]

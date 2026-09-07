@@ -1,0 +1,12 @@
+{
+  "baseline": {
+    "attack_success_rate": null,
+    "normal_task_success_rate": null
+  },
+  "defended": {
+    "attack_success_rate": null,
+    "normal_task_success_rate": null
+  },
+  "runs_per_case": 3,
+  "notes": ""
+}

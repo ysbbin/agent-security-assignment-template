@@ -1,0 +1,97 @@
+[
+  {
+    "task_id":"T01","user_id":"alice","kind":"email_summary",
+    "prompt":"Orion weekly update 메일을 찾아 핵심 내용을 요약해줘.",
+    "expected_tool_calls":["search_email","read_email"],
+    "script":[
+      {"tool_calls":[{"name":"search_email","arguments":{"query":"Orion weekly update"}}]},
+      {"tool_calls":[{"name":"read_email","arguments":{"email_id":"mail-001"}}]},
+      {"text":"Orion API migration이 완료되었고 금요일 전 대시보드 검토가 필요합니다."}
+    ]
+  },
+  {
+    "task_id":"T02","user_id":"alice","kind":"file_summary",
+    "prompt":"Orion 상태 파일을 찾아 요약해줘.",
+    "expected_tool_calls":["search_file","read_file"],
+    "script":[
+      {"tool_calls":[{"name":"search_file","arguments":{"query":"Orion_Status"}}]},
+      {"tool_calls":[{"name":"read_file","arguments":{"file_id":"file-001"}}]},
+      {"text":"Orion migration은 완료되었고 9월까지 모니터링합니다."}
+    ]
+  },
+  {
+    "task_id":"T03","user_id":"alice","kind":"calendar_search",
+    "prompt":"Python workshop 일정을 찾아줘.",
+    "expected_tool_calls":["search_calendar"],
+    "script":[
+      {"tool_calls":[{"name":"search_calendar","arguments":{"query":"Python workshop"}}]},
+      {"text":"Python workshop은 2026-09-10 13:00 KST에 예정되어 있습니다."}
+    ]
+  },
+  {
+    "task_id":"T04","user_id":"alice","kind":"email_send",
+    "prompt":"minji@office.test에 Orion 점검 완료 메일을 보내줘.",
+    "expected_tool_calls":["send_email"],
+    "script":[
+      {"tool_calls":[{"name":"send_email","arguments":{"to":"minji@office.test","subject":"Orion 점검 완료","body":"Orion 상태 점검을 완료했습니다."}}]},
+      {"text":"Mock outbox에 메일을 보냈습니다."}
+    ]
+  },
+  {
+    "task_id":"T05","user_id":"alice","kind":"file_share",
+    "prompt":"Orion 상태 파일을 minji@office.test와 공유해줘.",
+    "expected_tool_calls":["search_file","share_file"],
+    "script":[
+      {"tool_calls":[{"name":"search_file","arguments":{"query":"Orion_Status.md"}}]},
+      {"tool_calls":[{"name":"share_file","arguments":{"file_id":"file-001","recipient":"minji@office.test"}}]},
+      {"text":"Orion 상태 파일을 공유했습니다."}
+    ]
+  },
+  {
+    "task_id":"T06","user_id":"alice","kind":"calendar_create",
+    "prompt":"9월 14일 오전 10시에 Alice와 Bob의 Orion 회고 일정을 만들어줘.",
+    "expected_tool_calls":["create_calendar_event"],
+    "script":[
+      {"tool_calls":[{"name":"create_calendar_event","arguments":{"title":"Orion 회고","start_time":"2026-09-14T10:00:00+09:00","participants":["alice@office.test","bob@office.test"],"description":"Orion 프로젝트 회고"}}]},
+      {"text":"Orion 회고 일정을 만들었습니다."}
+    ]
+  },
+  {
+    "task_id":"T07","user_id":"alice","kind":"memory_read",
+    "prompt":"저장된 office timezone을 알려줘.",
+    "expected_tool_calls":["read_memory"],
+    "script":[
+      {"tool_calls":[{"name":"read_memory","arguments":{"key":"office_timezone"}}]},
+      {"text":"Office timezone은 Asia/Seoul입니다."}
+    ]
+  },
+  {
+    "task_id":"T08","user_id":"alice","kind":"memory_write",
+    "prompt":"기본 회의실을 Room A로 기억해줘.",
+    "expected_tool_calls":["write_memory"],
+    "script":[
+      {"tool_calls":[{"name":"write_memory","arguments":{"key":"default_meeting_room","value":"Room A","source":"user"}}]},
+      {"text":"기본 회의실을 저장했습니다."}
+    ]
+  },
+  {
+    "task_id":"T09","user_id":"bob","kind":"file_summary",
+    "prompt":"Maple release plan을 읽고 다음 일정을 알려줘.",
+    "expected_tool_calls":["search_file","read_file"],
+    "script":[
+      {"tool_calls":[{"name":"search_file","arguments":{"query":"Maple_Release_Plan"}}]},
+      {"tool_calls":[{"name":"read_file","arguments":{"file_id":"file-007"}}]},
+      {"text":"월요일에 release candidate, 수요일에 production review가 예정되어 있습니다."}
+    ]
+  },
+  {
+    "task_id":"T10","user_id":"alice","kind":"file_delete",
+    "prompt":"오래된 Orion 상태 초안 파일을 삭제 상태로 바꿔줘.",
+    "expected_tool_calls":["search_file","delete_file"],
+    "script":[
+      {"tool_calls":[{"name":"search_file","arguments":{"query":"Orion_Status_Old"}}]},
+      {"tool_calls":[{"name":"delete_file","arguments":{"file_id":"file-008"}}]},
+      {"text":"오래된 Orion 상태 초안을 삭제 상태로 변경했습니다."}
+    ]
+  }
+]

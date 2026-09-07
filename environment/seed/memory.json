@@ -1,0 +1,13 @@
+{
+  "entries": [
+    {
+      "key": "office_timezone",
+      "value": "Asia/Seoul",
+      "source": "system_seed",
+      "source_id": null,
+      "confidence": 1.0,
+      "created_at": "2026-09-01T00:00:00Z",
+      "updated_at": "2026-09-01T00:00:00Z"
+    }
+  ]
+}

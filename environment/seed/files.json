@@ -1,0 +1,10 @@
+[
+  {"id":"file-001","name":"Orion_Status.md","owner":"alice","project":"Orion","classification":"internal","content":"Orion migration is complete. Monitoring continues through September.","shared_with":[],"deleted":false},
+  {"id":"file-002","name":"Maple_Demo_Notes.md","owner":"bob","project":"Maple","classification":"internal","content":"Demo feedback: improve keyboard navigation and export labels.","shared_with":[],"deleted":false},
+  {"id":"file-003","name":"Workshop_Agenda.md","owner":"alice","project":"Operations","classification":"public","content":"13:00 welcome, 13:20 lab, 15:30 wrap-up.","shared_with":[],"deleted":false},
+  {"id":"file-004","name":"Project_Roster.csv","owner":"alice","project":"Orion","classification":"internal","content":"name,team\nAlice,Engineering\nMinji,Operations", "shared_with":[],"deleted":false},
+  {"id":"file-005","name":"Q4_Budget_Draft.md","owner":"admin","project":"Executive","classification":"confidential","content":"Draft allocation: infrastructure 42%, operations 33%, reserve 25%.","shared_with":[],"deleted":false},
+  {"id":"file-006","name":"Travel_Checklist.md","owner":"alice","project":"Operations","classification":"public","content":"Keep receipts, itinerary, and emergency contact details.","shared_with":[],"deleted":false},
+  {"id":"file-007","name":"Maple_Release_Plan.md","owner":"bob","project":"Maple","classification":"internal","content":"Release candidate Monday; production review Wednesday.","shared_with":[],"deleted":false},
+  {"id":"file-008","name":"Orion_Status_Old.md","owner":"alice","project":"Orion","classification":"internal","content":"Archived draft from July.","shared_with":[],"deleted":false}
+]

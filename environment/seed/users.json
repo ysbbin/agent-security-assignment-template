@@ -1,0 +1,26 @@
+[
+  {
+    "user_id": "alice",
+    "name": "Alice Kim",
+    "email": "alice@office.test",
+    "role": "employee",
+    "allowed_projects": ["Orion", "Maple"],
+    "allowed_scopes": ["email:read", "email:send", "file:read", "file:share", "calendar:read", "calendar:write", "memory:read", "memory:write"]
+  },
+  {
+    "user_id": "bob",
+    "name": "Bob Lee",
+    "email": "bob@office.test",
+    "role": "employee",
+    "allowed_projects": ["Maple"],
+    "allowed_scopes": ["email:read", "email:send", "file:read", "file:share", "calendar:read", "calendar:write", "memory:read", "memory:write"]
+  },
+  {
+    "user_id": "admin",
+    "name": "Dana Park",
+    "email": "dana@office.test",
+    "role": "admin",
+    "allowed_projects": ["Orion", "Maple", "Executive"],
+    "allowed_scopes": ["email:read", "email:send", "file:read", "file:share", "file:delete", "file:confidential", "calendar:read", "calendar:write", "memory:read", "memory:write"]
+  }
+]

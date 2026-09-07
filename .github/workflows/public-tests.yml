@@ -1,0 +1,31 @@
+name: Public tests
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      LLM_PROVIDER: scripted
+      LLM_MODEL: gemini-2.5-flash-lite
+      TEMPERATURE: "0"
+      MAX_STEPS: "6"
+      TRACE_ENABLED: "true"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install dependencies
+        run: python -m pip install -r requirements-dev.txt
+      - name: Initialize mock state
+        run: python reset.py --all
+      - name: Run public tests
+        run: python -m pytest tests
