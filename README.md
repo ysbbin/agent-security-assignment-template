@@ -1,6 +1,6 @@
 # Agent Security Red Team & Defense Challenge
 
-이 README는 저장소를 처음 받은 시점부터 Agent 실행, Red Team 분석, Blue Team 방어, GitHub 및 최종 보고서 제출까지의 전체 절차를 설명한다. 과제를 시작하기 전에 위에서부터 차례대로 읽고 진행한다.
+이 README는 과제 파일 다운로드부터 Agent 실행, Red Team 분석, Blue Team 방어, 제출 ZIP과 최종 보고서 제출까지의 전체 절차를 설명한다. 과제를 시작하기 전에 위에서부터 차례대로 읽고 진행한다.
 
 ## 1. 과제 개요
 
@@ -24,7 +24,7 @@
 | Red Team 취약점 2개 | 40 |
 | Blue Team 방어 설계·구현 | 30 |
 | Security / Utility 평가 | 20 |
-| 보고서·재현성·GitHub 제출 품질 | 10 |
+| 보고서·재현성·제출 파일 품질 | 10 |
 
 필수 개수를 초과하여 서로 다른 취약점을 발견한 경우 하나당 5점, 최대 15점의 보너스를 부여한다.
 
@@ -32,10 +32,11 @@
 
 ### 필수
 
-- 개인 GitHub 계정
-- [Git](https://git-scm.com/downloads)
 - [Python 3.11](https://www.python.org/downloads/)
+- 파일 압축을 풀고 편집할 수 있는 프로그램
 - 실제 Agent 실험에 사용할 Gemini API Key
+
+GitHub 계정과 Git 프로그램은 필요하지 않다. 웹 브라우저로 과제 ZIP을 다운로드하고, 완성된 결과는 LMS/eCampus에 파일로 제출한다.
 
 Python을 설치한 뒤 버전을 확인한다.
 
@@ -52,38 +53,30 @@ py -3.11 --version
 
 `Python 3.11.x`가 표시되는 환경을 권장한다. Python 3.10 이하는 사용하지 않는다.
 
-## 3. 개인 과제 저장소 받기
+## 3. 과제 파일 다운로드
 
-1. 조교가 보낸 GitHub Repository 초대를 수락한다.
-2. 본인에게 배정된 Private Repository인지 확인한다.
-3. Repository 이름이 `agent-security-<본인 GitHub ID>` 형식인지 확인한다.
-4. Repository의 초록색 **Code** 버튼에서 HTTPS 주소를 복사한다.
+이번 학기 배포본은 다음 GitHub Release로 고정한다.
 
-터미널에서 원하는 작업 폴더로 이동한 뒤 Clone한다.
+- [Agent Security Assignment v1.0.0](https://github.com/ysbbin/agent-security-assignment-template/releases/tag/assignment-v1.0.0)
+- [과제 ZIP 바로 다운로드](https://github.com/ysbbin/agent-security-assignment-template/archive/refs/tags/assignment-v1.0.0.zip)
 
-```bash
-git clone https://github.com/ysbbin/agent-security-<본인-GitHub-ID>.git
-cd agent-security-<본인-GitHub-ID>
-```
+다운로드 순서:
 
-ZIP 다운로드는 Git 이력과 원격 저장소 연결이 사라지므로 권장하지 않는다. 부득이하게 ZIP을 사용했다면 최종 제출 전에 본인 Repository로 Commit과 Push가 정상 수행되는지 반드시 확인한다.
+1. 위 **Agent Security Assignment v1.0.0** 링크를 연다.
+2. 페이지 아래 **Assets**를 펼친다.
+3. **Source code (zip)**을 선택해 다운로드한다.
+4. 다운로드한 ZIP의 압축을 완전히 푼다.
+5. 압축을 푼 `agent-security-assignment-template-assignment-v1.0.0` 폴더를 VS Code 등 편집기로 연다.
 
-## 4. 본인 정보 첫 Commit
+ZIP 내부를 직접 열어 작업하지 않는다. 반드시 먼저 압축을 풀어야 가상환경, 파일 수정과 실행 결과 저장이 정상 동작한다. 모든 학생은 동일한 채점 환경을 위해 위 `assignment-v1.0.0` 배포본으로 시작한다.
 
-저장소의 `STUDENT.md`를 열어 다음 내용을 작성한다.
+## 4. 본인 정보 작성
+
+프로젝트 루트의 `STUDENT.md`를 열어 다음 내용을 작성하고 저장한다.
 
 ```text
 학번: 본인 학번
 이름: 본인 이름
-GitHub ID: 본인 GitHub Username
-```
-
-저장한 뒤 첫 Commit을 Push한다.
-
-```bash
-git add STUDENT.md
-git commit -m "Add student information"
-git push origin main
 ```
 
 ## 5. Python 가상환경 만들기
@@ -141,19 +134,12 @@ TRACE_ENABLED=true
 
 다음 원칙을 반드시 지킨다.
 
-- `.env`와 API Key를 Git에 Commit하거나 채팅·보고서에 첨부하지 않는다.
+- `.env`와 API Key를 제출 ZIP, 채팅, 캡처 화면 또는 보고서에 첨부하지 않는다.
 - Python 코드에 API Key를 직접 작성하지 않는다.
 - 지정된 모델명, temperature와 max steps를 변경하지 않는다.
 - Key가 노출되었다면 즉시 Google AI Studio에서 폐기하고 새 Key를 발급한다.
 
-Commit 전에 `.env`가 추적되지 않는지 확인할 수 있다.
-
-```bash
-git status --short
-git check-ignore .env
-```
-
-두 번째 명령 결과로 `.env`가 표시되면 정상이다.
+최종 제출 ZIP은 `package_submission.py`가 `.env`를 자동으로 제외하고 API Key 형태가 다른 제출 파일에 남아 있는지도 검사한다.
 
 ## 7. 최초 상태 초기화
 
@@ -281,7 +267,7 @@ submission/          최종 제출 폴더
   -> Mock 상태 변화 또는 비인가 효과
 ```
 
-일반 실험 Trace는 Git에서 제외된다. 제출할 Trace만 선별하여 복사한다.
+일반 실험 Trace는 제출하지 않는다. 증거로 사용할 Trace만 선별하여 복사한다.
 
 ### macOS / Linux
 
@@ -320,14 +306,7 @@ Copy-Item traces\<run_id>.jsonl submission\red_team\traces\
 
 최소 2개의 서로 다른 Root Cause를 입증해야 한다. 같은 원인을 Payload만 바꿔 반복한 결과는 별도 취약점으로 인정되지 않는다.
 
-Red Team 결과를 Commit한다.
-
-```bash
-git status
-git add submission/red_team
-git commit -m "Submit red team analysis"
-git push origin main
-```
+Red Team 분석을 마치면 작성 파일과 선별한 Trace가 `submission/red_team/` 아래에 저장되어 있는지 확인한다.
 
 ## 13. OWASP 기준 자료 사용법
 
@@ -346,7 +325,7 @@ git push origin main
 
 ## 14. Blue Team 수행 절차
 
-1. Red Team 제출 시점의 Commit을 확인한다.
+1. Red Team 분석 파일을 별도 위치에 복사해 방어 적용 전 결과를 보존한다.
 2. 방어 목표와 적용 위치를 먼저 문서화한다.
 3. Agent 코드에 하나 이상의 방어 기법을 구현한다.
 4. 발견한 공격을 방어 전과 동일한 조건에서 다시 실행한다.
@@ -370,16 +349,7 @@ python reset.py --all
 python -m pytest
 ```
 
-Blue Team 결과를 Commit한다.
-
-```bash
-git status
-git add .
-git commit -m "Implement and evaluate blue team defense"
-git push origin main
-```
-
-`git add .` 전에 `.env`, `environment/runtime/`, 일반 `traces/`가 포함되지 않았는지 반드시 확인한다.
+Blue Team 분석을 마치면 수정한 코드, 평가 결과와 보고서가 프로젝트 폴더에 저장되어 있는지 확인한다.
 
 ## 15. 최종 제출 구조
 
@@ -395,7 +365,7 @@ submission/
     └── results.json
 ```
 
-### GitHub Repository
+### 과제 결과 ZIP
 
 - Agent 및 방어 코드
 - Red Team 분석 문서
@@ -405,11 +375,25 @@ submission/
 - Security/Utility 결과
 - 작성 완료된 `STUDENT.md`
 
+프로젝트 루트에서 다음 명령을 실행한다.
+
+```bash
+python package_submission.py
+```
+
+Windows에서 `python` 명령이 연결되지 않으면 다음과 같이 실행한다.
+
+```powershell
+py -3.11 package_submission.py
+```
+
+이 명령은 Public Test, 학생 정보, 필수 결과 파일과 API Key 노출 여부를 검사한 뒤 `dist/정보보호론_학번_이름.zip`을 생성한다. `.env`, `.venv`, `.git`, Cache, 실행 중인 Mock 상태와 일반 Trace는 자동으로 제외된다. 검사가 실패하면 화면에 표시된 항목을 수정하고 다시 실행한다.
+
 ### LMS/eCampus
 
 - 최종 PDF 보고서 5~7장
 - 학번과 이름
-- 본인 Private GitHub Repository URL
+- `package_submission.py`가 생성한 ZIP
 
 별도 시연 영상은 요구하지 않는다.
 
@@ -427,31 +411,21 @@ submission/
 5. Security / Utility 비교
 6. 결론 및 배운 점
 
-PDF에는 핵심 Payload, Trace 일부와 결과 해석을 포함한다. 전체 Exploit과 Trace는 GitHub의 제출 폴더에서 재현할 수 있도록 구성한다.
+PDF에는 핵심 Payload, Trace 일부와 결과 해석을 포함한다. 전체 Exploit과 Trace는 제출 ZIP의 `submission/` 폴더에서 재현할 수 있도록 구성한다.
 
 ## 16. 최종 제출 전 체크리스트
 
-- [ ] `STUDENT.md`를 작성하고 Push했다.
+- [ ] `STUDENT.md`에 학번과 이름을 작성했다.
 - [ ] 최소 2개의 서로 다른 Root Cause를 재현했다.
 - [ ] 각 취약점에 Payload, Trace, Security Effect, OWASP 근거가 있다.
-- [ ] 선택한 Trace를 `submission/red_team/traces/`에 Commit했다.
+- [ ] 선택한 Trace를 `submission/red_team/traces/`에 복사했다.
 - [ ] 방어 코드와 설계 설명을 제출했다.
 - [ ] 방어 전후 Security/Utility를 동일 조건에서 비교했다.
 - [ ] `python -m pytest`가 통과한다.
-- [ ] `.env`와 API Key가 Git에 포함되지 않았다.
+- [ ] `.env`와 API Key가 제출 파일에 포함되지 않았다.
 - [ ] 실제 개인정보와 외부 서비스 데이터를 사용하지 않았다.
-- [ ] 모든 변경사항을 `main` 브랜치에 Push했다.
-- [ ] GitHub Repository URL과 PDF를 LMS에 제출했다.
-
-최종 Push 여부를 확인한다.
-
-```bash
-git status
-git log --oneline -5
-git remote -v
-```
-
-`git status`가 `working tree clean`이고 최신 Commit이 GitHub 웹 화면에도 표시되는지 확인한다.
+- [ ] `package_submission.py`가 오류 없이 ZIP을 생성했다.
+- [ ] 생성된 ZIP과 최종 PDF를 모두 LMS에 제출했다.
 
 ## 17. 자주 발생하는 문제
 
@@ -478,7 +452,7 @@ python reset.py --all
 - `.env` 파일이 프로젝트 루트에 있는지 확인한다.
 - `GEMINI_API_KEY=` 뒤에 공백이나 따옴표 없이 Key를 입력했는지 확인한다.
 - Google AI Studio에서 Key가 활성 상태인지 확인한다.
-- Key 자체를 화면 캡처, Issue, Commit 또는 보고서에 남기지 않는다.
+- Key 자체를 화면 캡처, 제출 ZIP, 채팅 또는 보고서에 남기지 않는다.
 
 ### 실행 결과가 매번 조금씩 다름
 
@@ -489,9 +463,13 @@ python reset.py --all
 python run.py --task-id T01 --provider gemini
 ```
 
-### Trace가 `git add`에 포함되지 않음
+### Trace가 제출 ZIP에 포함되지 않음
 
-일반 `traces/`는 의도적으로 Git에서 제외된다. 제출할 파일을 `submission/red_team/traces/`로 복사한다.
+일반 `traces/`는 의도적으로 제출에서 제외된다. 제출할 파일을 `submission/red_team/traces/`로 복사한 후 패키징 명령을 다시 실행한다.
+
+### 제출 ZIP 생성 실패
+
+오류 메시지에 표시된 `STUDENT.md`, Red/Blue Team 결과, Trace 또는 `results.json`을 완성한다. API Key 탐지 오류라면 표시된 파일에서 Key를 제거하고 노출된 Key를 폐기한다.
 
 ### `MAX_STEPS` 오류
 
@@ -499,8 +477,8 @@ python run.py --task-id T01 --provider gemini
 
 ## 18. 보안 및 윤리 원칙
 
-- 모든 공격 실험은 제공된 Mock 데이터와 본인 Private Repository 안에서만 수행한다.
-- 실제 메일, 클라우드 파일, 학교 시스템 또는 다른 학생의 Repository를 대상으로 실험하지 않는다.
+- 모든 공격 실험은 제공된 Mock 데이터와 본인의 로컬 과제 폴더 안에서만 수행한다.
+- 실제 메일, 클라우드 파일, 학교 시스템 또는 다른 학생의 과제 파일을 대상으로 실험하지 않는다.
 - 실제 개인정보를 Mock 데이터에 추가하지 않는다.
 - 다른 학생의 Payload, 코드 또는 보고서를 복사하지 않는다.
 - 노출된 API Key는 즉시 폐기한다.
