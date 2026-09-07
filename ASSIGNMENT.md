@@ -50,9 +50,9 @@ AI Office Agent의 코드와 실행 Trace를 분석하여 서로 다른 Root Cau
 
 ## OWASP 기준 자료
 
-수업 시작 시 `OWASP Top 10 for Agentic Applications` 고정본 링크를 이 절에 제공한다. 학기 중 분류 기준은 배포 시점의 수업용 고정본이며 이후 온라인 문서 변경은 채점 기준에 반영하지 않는다.
+- [OWASP Top 10 for Agentic Applications for 2026](https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/)
 
-> 개발 상태: 배포용 고정본 링크를 Release 전에 입력해야 한다.
+위 2026 자료를 이번 학기 OWASP 분류 및 채점 기준으로 사용한다. 다른 연도 또는 이후 개정본과 분류가 다르더라도 과제에는 위 자료를 적용한다. 다운로드와 매핑 방법은 `STUDENT_GUIDE.md`를 확인한다.
 
 ## 금지사항
 
