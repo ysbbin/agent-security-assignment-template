@@ -63,15 +63,15 @@ python --version
 
 이번 학기 배포본은 다음 GitHub Release로 고정한다.
 
-- [Agent Security Assignment v1.3.1](https://github.com/ysbbin/agent-security-assignment-template/releases/tag/assignment-v1.3.1)
-- [과제 ZIP 바로 다운로드](https://github.com/ysbbin/agent-security-assignment-template/archive/refs/tags/assignment-v1.3.1.zip)
+- [Agent Security Assignment v1.4.0](https://github.com/ysbbin/agent-security-assignment-template/releases/tag/assignment-v1.4.0)
+- [과제 ZIP 바로 다운로드](https://github.com/ysbbin/agent-security-assignment-template/archive/refs/tags/assignment-v1.4.0.zip)
 
 다운로드 순서:
 
 1. 위 Release 링크를 연다.
 2. 페이지 아래 **Assets**에서 **Source code (zip)**을 다운로드한다.
 3. 다운로드한 ZIP의 압축을 완전히 푼다.
-4. `agent-security-assignment-template-assignment-v1.3.1` 폴더를 편집기로 연다.
+4. `agent-security-assignment-template-assignment-v1.4.0` 폴더를 편집기로 연다.
 5. 방어 전 원본을 다시 확인할 수 있도록 다운로드 ZIP은 과제가 끝날 때까지 보관한다.
 
 ZIP 내부를 직접 열어 작업하지 않는다. 반드시 먼저 압축을 풀어야 가상환경, 파일 수정과 실행 결과 저장이 정상 동작한다.
@@ -238,10 +238,10 @@ tasks/               정상 공개 Task
 tracing/             JSONL Trace 생성
 evaluation/          공개 Utility/Security 평가 코드
 tests/               Public Test와 학생 추가 방어 테스트
-submission/          공격 코드, 증거, 방어 매핑과 측정 결과
+submission/          공격·방어 결과 파일과 측정 결과
 ```
 
-Red Team 단계에서는 먼저 원본 동작을 분석하고 공격 재현 코드를 `submission/attacks/`에 작성한다. Blue Team 단계에서는 취약점의 코드 수준 Root Cause에 따라 `agent/`, `tools/`, `plugins/`, `tracing/` 등 실제 실행 코드를 직접 수정한다. 방어 회귀 테스트는 `tests/`에 추가할 수 있다.
+Red Team 결과는 `submission/attacks/F01`~`F03`, Blue Team 결과는 `submission/defenses/D01`~`D03`에 넣는다. 각 폴더 안의 파일명과 하위 폴더 구성은 자유다. Blue Team 단계에서는 취약점의 Root Cause에 따라 `agent/`, `tools/`, `plugins/`, `tracing/` 등 실제 실행 코드도 직접 수정하며, 방어 회귀 테스트는 `tests/`에 추가할 수 있다.
 
 다음 규칙을 지킨다.
 
@@ -269,14 +269,14 @@ Red Team 단계에서는 먼저 원본 동작을 분석하고 공격 재현 코�
 입력 또는 데이터 → 모델 판단 → Tool Call → Mock 상태 변화 또는 비인가 효과
 ```
 
-`traces/`의 전체 로그는 제출 ZIP에서 제외된다. 각 Finding의 방어 전·후 대표 실행 Trace는 다음의 고정 파일명으로 저장한다.
+`traces/`의 전체 로그는 제출 ZIP에서 제외된다. 제출 증거로 사용할 Trace는 해당 공격 또는 방어 폴더 안에 자유로운 파일명으로 복사한다.
 
 ```text
-submission/attacks/F01/evidence/baseline.jsonl
-submission/attacks/F01/evidence/defended.jsonl
+submission/attacks/F01/my_baseline_runs.jsonl
+submission/defenses/D01/blocked_runs.jsonl
 ```
 
-F02와 F03도 동일하다. 각 파일에는 최소 3회 실행의 근거가 들어가야 하며, 여러 Trace를 하나의 JSONL로 합쳐도 된다. 복사한 Trace에 API Key나 개인정보가 없는지 확인한다.
+위 이름은 예시일 뿐이며 다른 이름이나 하위 폴더를 사용해도 된다. 각 Finding에는 방어 전·후 최소 3회 실행의 근거가 있어야 하며, 여러 Trace를 하나의 JSONL로 합쳐도 된다. 복사한 Trace에 API Key나 개인정보가 없는지 확인한다.
 
 ## 10. Red Team: 공격 코드 작성
 
@@ -284,14 +284,12 @@ F02와 F03도 동일하다. 각 파일에는 최소 3회 실행의 근거가 들
 
 ```text
 submission/attacks/
-├── F01/
-│   ├── reproduce.py
-│   └── evidence/
+├── F01/   # 파일명과 하위 폴더 자유
 ├── F02/
 └── F03/
 ```
 
-각 `reproduce.py`는 단순한 설명문이 아니라 교수자가 실행할 수 있는 공격 재현 코드여야 한다. 다음 작업을 코드로 수행하도록 작성한다.
+각 Finding 폴더에는 교수자가 실행할 수 있는 공격 재현 코드와 필요한 입력·증거 파일을 넣는다. Python, Notebook, Shell 등 구현 형식과 파일명은 자유지만, 다음 작업을 재현할 수 있어야 한다.
 
 1. 필요한 Mock 상태를 초기화하거나 실험 전제조건을 만든다.
 2. 정확한 사용자, Prompt, Context와 입력 데이터를 설정한다.
@@ -300,7 +298,7 @@ submission/attacks/
 5. 사전에 정의한 공격 성공 조건을 코드로 판정한다.
 6. 실행 방법과 결과를 터미널에 명확히 출력한다.
 
-패키징 전에는 템플릿의 `TODO_STUDENT`와 `NotImplementedError`를 제거해야 한다. Payload만 출력하거나 미리 만든 결과를 반환해서는 안 되며, 실제 Agent 실행과 상태 확인이 포함되어야 한다.
+Payload만 출력하거나 미리 만든 결과를 반환해서는 안 되며, 실제 Agent 실행과 상태 확인이 포함되어야 한다. 교수자가 실행 방법을 알 수 있도록 코드의 주석, `--help` 출력 또는 간단한 텍스트 파일 중 하나로 실행 명령을 남긴다.
 
 권장 작업 순서:
 
@@ -311,8 +309,8 @@ submission/attacks/
 5. 보안상 문제가 되는 실제 Tool Call 또는 상태 변화를 확인한다.
 6. 공격 성공 조건을 먼저 정의한다.
 7. 같은 조건에서 3회 이상 실행하여 Baseline ASR을 측정한다.
-8. `reproduce.py`로 초기화부터 성공 판정까지 재현한다.
-9. 방어 전 증거를 `evidence/baseline.jsonl`에 보존한다.
+8. 해당 F 폴더의 코드로 초기화부터 성공 판정까지 재현한다.
+9. 공격 코드와 방어 전 증거를 같은 F 폴더에 보존한다.
 
 발표자료에는 Finding별로 공격 표면, 전제조건, 정상 기대 동작, Payload, 재현 절차, Trace와 상태 변화, Security Effect, 코드 수준 Root Cause와 OWASP 매핑 근거를 설명한다. 별도의 공격 분석 Markdown 문서는 작성하지 않는다.
 
@@ -340,11 +338,11 @@ submission/attacks/
 3. 각 공격에서 반드시 지켜야 할 Security Invariant를 한 문장으로 정의한다.
 4. 입력 처리, Context, Session, Memory, Tool Registry 또는 실행 직전 검사 중 방어 계층을 선택한다.
 5. `agent/`, `tools/`, `plugins/` 등 Root Cause가 존재하는 실제 소스 코드를 수정한다.
-6. 필요한 경우 `tests/`에 방어 및 회귀 테스트를 추가한다.
+6. 대응하는 `submission/defenses/D01`~`D03` 폴더에 방어 코드, Patch, 테스트와 증거를 자유로운 파일명으로 넣는다.
 7. 원래 Payload와 표현·순서·데이터가 다른 변형 공격으로 우회 가능성을 확인한다.
-8. 방어 후 각 공격을 3회 이상 실행하고 `evidence/defended.jsonl`을 저장한다.
+8. 방어 후 각 공격을 3회 이상 실행하고 결과를 해당 D 폴더에 저장한다.
 9. 정상 Task `T01`~`T10`을 각각 3회 이상 실행한다.
-10. `submission/defense_manifest.json`과 `submission/results.json`을 완성한다.
+10. `submission/results.json`을 완성한다.
 
 방어는 공격 성공률을 낮추면서 정상 업무 성공률을 유지해야 한다.
 
@@ -360,27 +358,7 @@ python reset.py --all
 python -m pytest
 ```
 
-### defense_manifest.json 작성
-
-이 파일은 어떤 방어가 어떤 Finding을 해결하며 실제 어느 파일을 수정했는지 교수자가 찾을 수 있게 한다.
-
-```json
-{
-  "defenses": [
-    {
-      "id": "D01",
-      "finding_id": "F01",
-      "security_invariant": "학생이 정의한 반드시 유지되어야 할 보안 조건",
-      "modified_files": [
-        "agent/example.py",
-        "tests/test_example_defense.py"
-      ]
-    }
-  ]
-}
-```
-
-예시 경로는 실제 수정한 경로로 바꾼다. 각 Finding은 정확히 하나의 같은 번호 Defense와 연결되어야 하며, 모든 `modified_files`는 실제로 존재해야 한다. 방어 분석의 자세한 설명은 이 JSON이 아니라 최종 발표자료에 작성한다.
+`D01`은 `F01`, `D02`는 `F02`, `D03`은 `F03`에 대응한다. D 폴더에 넣은 방어 결과와 실제 수정된 프로젝트 코드는 모두 최종 ZIP에 포함된다. 수정한 파일·함수, Security Invariant와 설계 근거는 최종 발표자료에서 설명한다.
 
 ## 13. ASR 및 Task Utility 평가
 
@@ -412,14 +390,14 @@ Utility Change(%p) = Defended Task Utility - Baseline Task Utility
 
 추가 공격-방어 쌍마다 다음 작업을 모두 수행한다.
 
-1. `submission/attacks/F03`을 복사해 `F04` 또는 `F05` 폴더를 만든다.
-2. 해당 폴더의 `reproduce.py`, `baseline.jsonl`, `defended.jsonl`을 완성한다.
-3. `results.json`의 `findings` 배열에 같은 형식의 F04 또는 F05 결과를 추가한다.
-4. `defense_manifest.json`에 D04-F04 또는 D05-F05 매핑을 추가한다.
-5. 실제 방어 코드와 테스트를 프로젝트 소스에 추가한다.
+1. `submission/attacks/`에 `F04` 또는 `F05` 폴더를 만든다.
+2. `submission/defenses/`에 같은 번호의 `D04` 또는 `D05` 폴더를 만든다.
+3. 각 폴더에 자유로운 파일명으로 공격·방어 코드와 증거를 넣는다.
+4. `results.json`의 `findings` 배열에 같은 번호의 F04 또는 F05 결과를 추가한다.
+5. 실제 방어 코드와 테스트를 프로젝트 소스에 적용한다.
 6. 발표자료에 해당 공격 2페이지와 방어 1~2페이지를 추가한다.
 
-폴더, Results, Defense 매핑 중 하나라도 빠지면 완성된 가산점 쌍으로 인정하지 않으며 패키징 검사도 실패한다.
+F 폴더, 같은 번호의 D 폴더와 Results 중 하나라도 빠지면 완성된 가산점 쌍으로 인정하지 않으며 패키징 검사도 실패한다.
 
 ## 15. 코드 제출 구조와 package_submission.py
 
@@ -428,18 +406,19 @@ Utility Change(%p) = Defended Task Utility - Baseline Task Utility
 ```text
 submission/
 ├── attacks/
-│   ├── F01/
-│   │   ├── reproduce.py
-│   │   └── evidence/
-│   │       ├── baseline.jsonl
-│   │       └── defended.jsonl
+│   ├── F01/   # 공격 코드·입력·Trace, 파일명과 하위 폴더 자유
 │   ├── F02/
 │   └── F03/
-├── defense_manifest.json
+├── defenses/
+│   ├── D01/   # 방어 코드·Patch·테스트·Trace, 파일명과 하위 폴더 자유
+│   ├── D02/
+│   └── D03/
 └── results.json
 ```
 
-수정된 방어 코드는 별도로 복사하지 않는다. 학생이 직접 수정한 `agent/`, `tools/`, `plugins/`, `tests/` 등을 포함한 전체 프로젝트 코드가 ZIP에 함께 들어간다. 교수자는 고정 Release 원본과 제출 코드를 비교하고 `defense_manifest.json`에서 방어 위치를 확인한다.
+공격·방어 파일명은 자유롭게 작성한다. 단, 각 결과물을 대응하는 `F01`~`F03`, `D01`~`D03` 폴더에 넣어야 한다. `package_submission.py`는 두 폴더 아래의 모든 파일과 하위 폴더를 자동으로 취합한다.
+
+학생이 수정한 `agent/`, `tools/`, `plugins/`, `tests/` 등을 포함한 전체 프로젝트 코드도 ZIP에 함께 들어간다. 방어를 위해 원본 소스를 수정했다면 해당 변경을 그대로 유지하고, 대응 D 폴더에는 방어 구현 코드·Patch·테스트·실행 증거 중 채점에 필요한 파일을 넣는다.
 
 프로젝트 루트에서 패키징 명령을 실행한다.
 
@@ -456,10 +435,10 @@ py -3.11 package_submission.py
 패키저는 다음 작업을 자동으로 수행한다.
 
 1. 전체 Public Test를 실행한다.
-2. F01~F03의 `reproduce.py` 완성 여부를 검사한다.
-3. Finding별 `baseline.jsonl`과 `defended.jsonl`의 JSONL 형식을 검사한다.
-4. `defense_manifest.json`의 공격-방어 매핑과 수정 파일 존재 여부를 검사한다.
-5. `results.json`의 반복 횟수, ASR, Utility와 Summary 계산을 검사한다.
+2. 필수 F01~F03와 D01~D03 폴더가 존재하고 각 폴더에 작성된 결과 파일이 있는지 검사한다.
+3. F/D 번호와 `results.json`의 Finding ID가 일치하는지 검사한다.
+4. `results.json`의 반복 횟수, ASR, Utility와 Summary 계산을 검사한다.
+5. 공격·방어 폴더의 모든 파일과 수정된 전체 프로젝트 코드를 재귀적으로 수집한다.
 6. 제출 파일에서 Google API Key 형태를 검사한다.
 7. `dist/agent_security_submission.zip`을 생성한다.
 
@@ -566,11 +545,11 @@ Live LLM은 완전히 결정적이지 않을 수 있다. 같은 초기 상태와
 
 ### Trace가 제출 ZIP에 포함되지 않음
 
-일반 `traces/`는 제외된다. 각 Finding 폴더의 `evidence/baseline.jsonl`과 `evidence/defended.jsonl`에 증거를 저장한다.
+일반 `traces/`는 제외된다. 제출할 Trace를 대응하는 `submission/attacks/Fxx/` 또는 `submission/defenses/Dxx/` 아래에 자유로운 파일명으로 복사한다.
 
 ### 제출 ZIP 생성 실패
 
-오류 메시지에 표시된 공격 코드, Evidence, Defense Manifest 또는 Results를 완성한다. API Key 탐지 오류라면 해당 파일에서 Key를 제거하고 노출된 Key를 폐기한다.
+오류 메시지에 표시된 F/D 폴더 또는 Results를 완성한다. `.gitkeep`만 있는 폴더는 빈 폴더로 처리된다. API Key 탐지 오류라면 해당 파일에서 Key를 제거하고 노출된 Key를 폐기한다.
 
 ### `MAX_STEPS` 오류
 

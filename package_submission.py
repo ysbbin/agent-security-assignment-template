@@ -28,10 +28,8 @@ EXCLUDED_SUFFIXES = {".pyc", ".pyo", ".zip"}
 SECRET_PATTERNS = {
     "Google API Key": re.compile(rb"AIza[0-9A-Za-z_-]{20,}"),
 }
-SCAFFOLD_MARKER = "TODO_STUDENT"
 REQUIRED_FILES = (
     Path(".assignment-version.json"),
-    Path("submission/defense_manifest.json"),
     Path("submission/results.json"),
 )
 
@@ -132,75 +130,47 @@ def validate_results(results: dict) -> set[str]:
     return finding_ids
 
 
-def validate_jsonl(path: Path) -> None:
-    lines = [line for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
-    if not lines:
-        raise ValueError(f"비어 있는 증거 파일입니다: {path.relative_to(ROOT)}")
-    for line_number, line in enumerate(lines, start=1):
-        try:
-            event = json.loads(line)
-        except json.JSONDecodeError as exc:
-            raise ValueError(
-                f"JSONL 형식이 올바르지 않습니다: {path.relative_to(ROOT)}:{line_number}"
-            ) from exc
-        if not isinstance(event, dict):
-            raise ValueError(
-                f"JSONL 각 줄은 JSON 객체여야 합니다: {path.relative_to(ROOT)}:{line_number}"
-            )
+def numbered_directories(base: Path, prefix: str) -> set[str]:
+    if not base.is_dir():
+        return set()
+    return {
+        path.name
+        for path in base.iterdir()
+        if path.is_dir() and re.fullmatch(rf"{prefix}[0-9]{{2}}", path.name)
+    }
 
 
-def validate_attack_artifacts(finding_ids: set[str]) -> None:
+def substantive_files(directory: Path) -> list[Path]:
+    return [
+        path
+        for path in directory.rglob("*")
+        if path.is_file()
+        and not path.name.startswith(".")
+        and path.stat().st_size > 0
+        and should_include(path)
+    ]
+
+
+def validate_artifact_directories(finding_ids: set[str]) -> None:
     attacks_dir = ROOT / "submission" / "attacks"
-    present_ids = {path.name for path in attacks_dir.glob("F[0-9][0-9]") if path.is_dir()}
-    if present_ids != finding_ids:
-        raise ValueError("공격 폴더와 results.json의 Finding ID가 일치해야 합니다.")
+    defenses_dir = ROOT / "submission" / "defenses"
+    attack_ids = numbered_directories(attacks_dir, "F")
+    defense_ids = numbered_directories(defenses_dir, "D")
+    mapped_defense_ids = {"F" + defense_id[1:] for defense_id in defense_ids}
+
+    if attack_ids != finding_ids:
+        raise ValueError("공격 폴더 F01~F05와 results.json의 Finding ID가 일치해야 합니다.")
+    if mapped_defense_ids != finding_ids:
+        raise ValueError("각 공격 폴더와 같은 번호의 방어 폴더 D01~D05가 필요합니다.")
 
     for finding_id in sorted(finding_ids):
-        attack_dir = attacks_dir / finding_id
-        reproduce = attack_dir / "reproduce.py"
-        if not reproduce.is_file():
-            raise ValueError(f"공격 재현 코드가 없습니다: submission/attacks/{finding_id}/reproduce.py")
-        source = reproduce.read_text(encoding="utf-8")
-        if SCAFFOLD_MARKER in source or "NotImplementedError" in source:
-            raise ValueError(f"공격 재현 코드를 완성하세요: submission/attacks/{finding_id}/reproduce.py")
-        for phase in ("baseline", "defended"):
-            evidence = attack_dir / "evidence" / f"{phase}.jsonl"
-            if not evidence.is_file():
-                raise ValueError(f"{phase} 증거 Trace가 없습니다: {evidence.relative_to(ROOT)}")
-            validate_jsonl(evidence)
-
-
-def validate_defense_manifest(manifest: dict, finding_ids: set[str]) -> None:
-    defenses = manifest["defenses"]
-    if not isinstance(defenses, list):
-        raise ValueError("defense_manifest.json의 defenses는 배열이어야 합니다.")
-    mapped_ids: set[str] = set()
-    defense_ids: set[str] = set()
-    for defense in defenses:
-        defense_id = defense["id"]
-        finding_id = defense["finding_id"]
-        if defense_id in defense_ids or finding_id in mapped_ids:
-            raise ValueError("Defense ID 또는 Finding 매핑이 중복되었습니다.")
-        if defense_id != "D" + finding_id[1:]:
-            raise ValueError(f"{finding_id}는 D{finding_id[1:]}와 연결해야 합니다.")
-        if not str(defense["security_invariant"]).strip():
-            raise ValueError(f"{defense_id}의 Security Invariant를 작성하세요.")
-        modified_files = defense["modified_files"]
-        if not isinstance(modified_files, list) or not modified_files:
-            raise ValueError(f"{defense_id}의 수정 파일을 하나 이상 기록하세요.")
-        for value in modified_files:
-            relative = Path(value)
-            if relative.is_absolute() or ".." in relative.parts:
-                raise ValueError(f"안전하지 않은 수정 파일 경로입니다: {value}")
-            target = ROOT / relative
-            if not target.is_file():
-                raise ValueError(f"매니페스트에 적힌 수정 파일이 없습니다: {value}")
-            if relative.parts and relative.parts[0] in {"submission", "environment", "traces"}:
-                raise ValueError(f"방어 코드는 실제 Agent 또는 테스트 코드에 적용해야 합니다: {value}")
-        defense_ids.add(defense_id)
-        mapped_ids.add(finding_id)
-    if mapped_ids != finding_ids:
-        raise ValueError("모든 Finding에 정확히 하나의 대응 방어가 필요합니다.")
+        defense_id = "D" + finding_id[1:]
+        attack_files = substantive_files(attacks_dir / finding_id)
+        defense_files = substantive_files(defenses_dir / defense_id)
+        if not attack_files:
+            raise ValueError(f"공격 결과 파일을 하나 이상 작성하세요: submission/attacks/{finding_id}/")
+        if not defense_files:
+            raise ValueError(f"방어 결과 파일을 하나 이상 작성하세요: submission/defenses/{defense_id}/")
 
 
 def ensure_required_results() -> None:
@@ -214,15 +184,7 @@ def ensure_required_results() -> None:
     except (json.JSONDecodeError, KeyError, TypeError, ValueError) as exc:
         raise ValueError(f"submission/results.json 형식 또는 계산값이 올바르지 않습니다: {exc}") from exc
 
-    try:
-        manifest = json.loads(
-            (ROOT / "submission/defense_manifest.json").read_text(encoding="utf-8")
-        )
-        validate_defense_manifest(manifest, finding_ids)
-    except (json.JSONDecodeError, KeyError, TypeError, ValueError) as exc:
-        raise ValueError(f"submission/defense_manifest.json이 올바르지 않습니다: {exc}") from exc
-
-    validate_attack_artifacts(finding_ids)
+    validate_artifact_directories(finding_ids)
 
 
 def should_include(path: Path) -> bool:

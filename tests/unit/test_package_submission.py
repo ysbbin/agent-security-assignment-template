@@ -44,7 +44,9 @@ def completed_results(finding_ids: tuple[str, ...] = ("F01", "F02", "F03")) -> d
     }
 
 
-def create_completed_submission(root: Path, finding_ids: tuple[str, ...] = ("F01", "F02", "F03")) -> None:
+def create_completed_submission(
+    root: Path, finding_ids: tuple[str, ...] = ("F01", "F02", "F03")
+) -> None:
     (root / ".assignment-version.json").write_text("{}", encoding="utf-8")
     (root / "agent").mkdir()
     (root / "agent/core.py").write_text("print('defended')\n", encoding="utf-8")
@@ -53,27 +55,21 @@ def create_completed_submission(root: Path, finding_ids: tuple[str, ...] = ("F01
     (submission / "results.json").write_text(
         json.dumps(completed_results(finding_ids)), encoding="utf-8"
     )
-    defenses = [
-        {
-            "id": "D" + finding_id[1:],
-            "finding_id": finding_id,
-            "security_invariant": "Protect state changes",
-            "modified_files": ["agent/core.py"],
-        }
-        for finding_id in finding_ids
-    ]
-    (submission / "defense_manifest.json").write_text(
-        json.dumps({"defenses": defenses}), encoding="utf-8"
-    )
     for finding_id in finding_ids:
+        defense_id = "D" + finding_id[1:]
         attack_dir = submission / "attacks" / finding_id
-        evidence_dir = attack_dir / "evidence"
-        evidence_dir.mkdir(parents=True)
-        (attack_dir / "reproduce.py").write_text(
-            "def main():\n    return True\n", encoding="utf-8"
+        defense_dir = submission / "defenses" / defense_id
+        attack_dir.mkdir(parents=True)
+        defense_dir.mkdir(parents=True)
+        (attack_dir / f"student_attack_{finding_id}.py").write_text(
+            "print('attack')\n", encoding="utf-8"
         )
-        (evidence_dir / "baseline.jsonl").write_text('{"event":"baseline"}\n', encoding="utf-8")
-        (evidence_dir / "defended.jsonl").write_text('{"event":"defended"}\n', encoding="utf-8")
+        evidence_dir = attack_dir / "my_evidence"
+        evidence_dir.mkdir()
+        (evidence_dir / "runs.any-name").write_text("baseline and defended runs\n", encoding="utf-8")
+        (defense_dir / f"student_defense_{defense_id}.py").write_text(
+            "print('defense')\n", encoding="utf-8"
+        )
 
 
 def test_should_include_excludes_secrets_and_runtime(tmp_path: Path, monkeypatch) -> None:
@@ -86,15 +82,15 @@ def test_should_include_excludes_secrets_and_runtime(tmp_path: Path, monkeypatch
     runtime = tmp_path / "environment" / "runtime" / "memory.json"
     runtime.parent.mkdir(parents=True)
     runtime.write_text("{}", encoding="utf-8")
-    evidence = tmp_path / "submission" / "attacks" / "F01" / "evidence" / "baseline.jsonl"
-    evidence.parent.mkdir(parents=True)
-    evidence.write_text("{}\n", encoding="utf-8")
+    arbitrary = tmp_path / "submission" / "attacks" / "F01" / "any-name.bin"
+    arbitrary.parent.mkdir(parents=True)
+    arbitrary.write_text("artifact", encoding="utf-8")
     raw_trace = tmp_path / "traces" / "raw.jsonl"
     raw_trace.parent.mkdir()
     raw_trace.write_text("{}\n", encoding="utf-8")
 
     assert package_submission.should_include(source)
-    assert package_submission.should_include(evidence)
+    assert package_submission.should_include(arbitrary)
     assert not package_submission.should_include(env_file)
     assert not package_submission.should_include(runtime)
     assert not package_submission.should_include(raw_trace)
@@ -113,73 +109,73 @@ def test_check_secrets_rejects_google_api_key(tmp_path: Path, monkeypatch) -> No
         raise AssertionError("API Key pattern was not rejected")
 
 
-def test_ensure_required_results_accepts_completed_submission(tmp_path: Path, monkeypatch) -> None:
+def test_accepts_arbitrary_names_and_nested_files(tmp_path: Path, monkeypatch) -> None:
     monkeypatch.setattr(package_submission, "ROOT", tmp_path)
     create_completed_submission(tmp_path)
 
     package_submission.ensure_required_results()
 
 
-def test_ensure_required_results_rejects_unfinished_attack_code(tmp_path: Path, monkeypatch) -> None:
+def test_rejects_empty_template_directory(tmp_path: Path, monkeypatch) -> None:
     monkeypatch.setattr(package_submission, "ROOT", tmp_path)
     create_completed_submission(tmp_path)
-    reproduce = tmp_path / "submission/attacks/F01/reproduce.py"
-    reproduce.write_text("# TODO_STUDENT\nraise NotImplementedError\n", encoding="utf-8")
+    attack_dir = tmp_path / "submission/attacks/F01"
+    for path in sorted(attack_dir.rglob("*"), reverse=True):
+        if path.is_file():
+            path.unlink()
+        elif path.is_dir():
+            path.rmdir()
+    (attack_dir / ".gitkeep").write_text("", encoding="utf-8")
 
     try:
         package_submission.ensure_required_results()
     except ValueError as exc:
-        assert "공격 재현 코드를 완성" in str(exc)
+        assert "공격 결과 파일" in str(exc)
     else:
-        raise AssertionError("Unfinished attack scaffold was not rejected")
+        raise AssertionError("Empty attack directory was not rejected")
 
 
-def test_ensure_required_results_accepts_complete_bonus_pair(tmp_path: Path, monkeypatch) -> None:
+def test_accepts_complete_bonus_pair(tmp_path: Path, monkeypatch) -> None:
     monkeypatch.setattr(package_submission, "ROOT", tmp_path)
     create_completed_submission(tmp_path, ("F01", "F02", "F03", "F04"))
 
     package_submission.ensure_required_results()
 
 
-def test_ensure_required_results_rejects_manifest_mismatch(tmp_path: Path, monkeypatch) -> None:
+def test_rejects_unpaired_defense_directory(tmp_path: Path, monkeypatch) -> None:
     monkeypatch.setattr(package_submission, "ROOT", tmp_path)
     create_completed_submission(tmp_path)
-    manifest_path = tmp_path / "submission/defense_manifest.json"
-    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    manifest["defenses"] = manifest["defenses"][:2]
-    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    defense = tmp_path / "submission/defenses/D03"
+    for path in defense.iterdir():
+        path.unlink()
+    defense.rmdir()
 
     try:
         package_submission.ensure_required_results()
     except ValueError as exc:
-        assert "대응 방어" in str(exc)
+        assert "같은 번호의 방어 폴더" in str(exc)
     else:
-        raise AssertionError("Missing defense mapping was not rejected")
+        raise AssertionError("Missing defense directory was not rejected")
 
 
-def test_main_builds_sanitized_submission_archive(tmp_path: Path, monkeypatch) -> None:
+def test_main_packages_every_file_under_attack_and_defense(tmp_path: Path, monkeypatch) -> None:
     monkeypatch.setattr(package_submission, "ROOT", tmp_path)
     monkeypatch.setattr(package_submission, "DIST_DIR", tmp_path / "dist")
     monkeypatch.setattr(package_submission, "run_public_tests", lambda: None)
     create_completed_submission(tmp_path)
     env_file = tmp_path / ".env"
     env_file.write_text("GEMINI_API_KEY=not-packaged", encoding="utf-8")
-    raw_trace = tmp_path / "traces/raw.jsonl"
-    raw_trace.parent.mkdir()
-    raw_trace.write_text("{}\n", encoding="utf-8")
 
     assert package_submission.main() == 0
     archive_path = tmp_path / "dist/agent_security_submission.zip"
-    assert archive_path.is_file()
     with zipfile.ZipFile(archive_path) as archive:
         names = set(archive.namelist())
     prefix = "agent_security_submission/"
+    assert prefix + "submission/attacks/F03/student_attack_F03.py" in names
+    assert prefix + "submission/attacks/F03/my_evidence/runs.any-name" in names
+    assert prefix + "submission/defenses/D03/student_defense_D03.py" in names
     assert prefix + "agent/core.py" in names
-    assert prefix + "submission/attacks/F03/reproduce.py" in names
-    assert prefix + "submission/attacks/F03/evidence/defended.jsonl" in names
-    assert prefix + "submission/defense_manifest.json" in names
     assert prefix + ".env" not in names
-    assert prefix + "traces/raw.jsonl" not in names
 
 
 def test_validate_results_rejects_incorrect_summary() -> None:
