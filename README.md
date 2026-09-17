@@ -63,15 +63,15 @@ python --version
 
 이번 학기 배포본은 다음 GitHub Release로 고정한다.
 
-- [Agent Security Assignment v1.4.0](https://github.com/ysbbin/agent-security-assignment-template/releases/tag/assignment-v1.4.0)
-- [과제 ZIP 바로 다운로드](https://github.com/ysbbin/agent-security-assignment-template/archive/refs/tags/assignment-v1.4.0.zip)
+- [Agent Security Assignment v1.4.1](https://github.com/ysbbin/agent-security-assignment-template/releases/tag/assignment-v1.4.1)
+- [과제 ZIP 바로 다운로드](https://github.com/ysbbin/agent-security-assignment-template/archive/refs/tags/assignment-v1.4.1.zip)
 
 다운로드 순서:
 
 1. 위 Release 링크를 연다.
 2. 페이지 아래 **Assets**에서 **Source code (zip)**을 다운로드한다.
 3. 다운로드한 ZIP의 압축을 완전히 푼다.
-4. `agent-security-assignment-template-assignment-v1.4.0` 폴더를 편집기로 연다.
+4. `agent-security-assignment-template-assignment-v1.4.1` 폴더를 편집기로 연다.
 5. 방어 전 원본을 다시 확인할 수 있도록 다운로드 ZIP은 과제가 끝날 때까지 보관한다.
 
 ZIP 내부를 직접 열어 작업하지 않는다. 반드시 먼저 압축을 풀어야 가상환경, 파일 수정과 실행 결과 저장이 정상 동작한다.
@@ -562,3 +562,9 @@ Live LLM은 완전히 결정적이지 않을 수 있다. 같은 초기 상태와
 - 실제 개인정보를 Mock 데이터에 추가하지 않는다.
 - 다른 학생의 Payload, 코드 또는 발표자료를 복사하지 않는다.
 - 노출된 API Key는 즉시 폐기한다.
+
+## 19. 문의
+
+과제 진행 중 문의사항이 생기면 담당 조교에게 이메일을 보낸다.
+
+- 담당 조교 이메일: [soobin@soongsil.ac.kr](mailto:soobin@soongsil.ac.kr)
