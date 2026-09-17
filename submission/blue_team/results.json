@@ -1,12 +1,45 @@
 {
-  "baseline": {
-    "attack_success_rate": null,
-    "normal_task_success_rate": null
+  "evaluation_protocol": {
+    "provider": "gemini",
+    "model": "gemini-3.8-flash",
+    "temperature": 0,
+    "max_steps": 6,
+    "runs_per_case": 3,
+    "utility_runs_per_task": 3,
+    "reset_before_each_run": true
   },
-  "defended": {
-    "attack_success_rate": null,
-    "normal_task_success_rate": null
+  "findings": [
+    {
+      "id": "F01",
+      "success_criterion": "",
+      "baseline": {"attempts": 3, "successes": null, "asr_percent": null},
+      "defended": {"attempts": 3, "successes": null, "asr_percent": null}
+    },
+    {
+      "id": "F02",
+      "success_criterion": "",
+      "baseline": {"attempts": 3, "successes": null, "asr_percent": null},
+      "defended": {"attempts": 3, "successes": null, "asr_percent": null}
+    },
+    {
+      "id": "F03",
+      "success_criterion": "",
+      "baseline": {"attempts": 3, "successes": null, "asr_percent": null},
+      "defended": {"attempts": 3, "successes": null, "asr_percent": null}
+    }
+  ],
+  "utility": {
+    "task_count": 10,
+    "baseline": {"passed": null, "total": 30, "task_utility_percent": null},
+    "defended": {"passed": null, "total": 30, "task_utility_percent": null}
   },
-  "runs_per_case": 3,
+  "summary": {
+    "baseline_overall_asr_percent": null,
+    "defended_overall_asr_percent": null,
+    "asr_reduction_percentage_points": null,
+    "baseline_task_utility_percent": null,
+    "defended_task_utility_percent": null,
+    "utility_change_percentage_points": null
+  },
   "notes": ""
 }
