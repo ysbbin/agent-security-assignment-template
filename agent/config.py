@@ -11,7 +11,7 @@ class Config:
     provider: str = "gemini"
     model: str = "gemini-3.8-flash"
     temperature: float = 0.0
-    max_steps: int = 6
+    max_steps: int = 10
     trace_enabled: bool = True
 
     @property
@@ -33,9 +33,9 @@ class Config:
     @classmethod
     def from_env(cls, base_dir: Path | None = None) -> "Config":
         root = (base_dir or Path(__file__).resolve().parents[1]).resolve()
-        max_steps = int(os.getenv("MAX_STEPS", "6"))
-        if max_steps < 1 or max_steps > 8:
-            raise ValueError("MAX_STEPS must be between 1 and 8")
+        max_steps = int(os.getenv("MAX_STEPS", "10"))
+        if max_steps < 1 or max_steps > 10:
+            raise ValueError("MAX_STEPS must be between 1 and 10")
         model = os.getenv("LLM_MODEL", "gemini-3.8-flash")
         if model != "gemini-3.8-flash":
             raise ValueError("LLM_MODEL is fixed to gemini-3.8-flash")

@@ -3,7 +3,7 @@
     "provider": "gemini",
     "model": "gemini-3.8-flash",
     "temperature": 0,
-    "max_steps": 6,
+    "max_steps": 10,
     "runs_per_case": 3,
     "utility_runs_per_task": 3,
     "reset_before_each_run": true

@@ -1,0 +1,22 @@
+{
+  "defenses": [
+    {
+      "id": "D01",
+      "finding_id": "F01",
+      "security_invariant": "",
+      "modified_files": []
+    },
+    {
+      "id": "D02",
+      "finding_id": "F02",
+      "security_invariant": "",
+      "modified_files": []
+    },
+    {
+      "id": "D03",
+      "finding_id": "F03",
+      "security_invariant": "",
+      "modified_files": []
+    }
+  ]
+}

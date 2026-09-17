@@ -9,78 +9,31 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parent
-STUDENT_FILE = ROOT / "STUDENT.md"
 DIST_DIR = ROOT / "dist"
+REQUIRED_FINDINGS = ("F01", "F02", "F03")
+OPTIONAL_FINDINGS = ("F04", "F05")
 
 EXCLUDED_DIRS = {
     ".git",
+    ".idea",
     ".venv",
+    ".vscode",
     ".pytest_cache",
     "__pycache__",
     "dist",
+    "venv",
 }
 EXCLUDED_FILES = {".env", ".coverage"}
 EXCLUDED_SUFFIXES = {".pyc", ".pyo", ".zip"}
 SECRET_PATTERNS = {
     "Google API Key": re.compile(rb"AIza[0-9A-Za-z_-]{20,}"),
 }
-
+SCAFFOLD_MARKER = "TODO_STUDENT"
 REQUIRED_FILES = (
-    Path("STUDENT.md"),
     Path(".assignment-version.json"),
-    Path("submission/red_team/vulnerability_01.md"),
-    Path("submission/red_team/vulnerability_02.md"),
-    Path("submission/red_team/vulnerability_03.md"),
-    Path("submission/blue_team/defense_report.md"),
-    Path("submission/blue_team/results.json"),
+    Path("submission/defense_manifest.json"),
+    Path("submission/results.json"),
 )
-REQUIRED_MARKDOWN_FILES = REQUIRED_FILES[2:6]
-
-
-def read_student() -> tuple[str, str]:
-    text = STUDENT_FILE.read_text(encoding="utf-8")
-    student_id_match = re.search(r"^학번:\s*(.+?)\s*$", text, re.MULTILINE)
-    name_match = re.search(r"^이름:\s*(.+?)\s*$", text, re.MULTILINE)
-    if not student_id_match or not name_match:
-        raise ValueError("STUDENT.md에 학번과 이름을 모두 작성하세요.")
-    student_id = student_id_match.group(1).strip()
-    name = name_match.group(1).strip()
-    if not re.fullmatch(r"[0-9A-Za-z_-]+", student_id):
-        raise ValueError("학번에는 숫자, 영문자, '-' 또는 '_'만 사용할 수 있습니다.")
-    if not re.fullmatch(r"[0-9A-Za-z가-힣_-]+", name):
-        raise ValueError("이름에는 한글, 영문자, 숫자, '-' 또는 '_'만 사용할 수 있습니다.")
-    return student_id, name
-
-
-def ensure_required_results() -> None:
-    missing = [str(path) for path in REQUIRED_FILES if not (ROOT / path).is_file()]
-    if missing:
-        raise ValueError("필수 파일이 없습니다: " + ", ".join(missing))
-
-    for relative in REQUIRED_MARKDOWN_FILES:
-        text = (ROOT / relative).read_text(encoding="utf-8")
-        if "<!-- REQUIRED:" in text:
-            raise ValueError(f"작성 완료 표식이 남아 있습니다: {relative}")
-        body_lines = [
-            line.strip()
-            for line in text.splitlines()
-            if line.strip() and not line.lstrip().startswith("#")
-        ]
-        if not body_lines:
-            raise ValueError(f"작성되지 않은 제출 문서입니다: {relative}")
-
-    results_path = ROOT / "submission/blue_team/results.json"
-    try:
-        results = json.loads(results_path.read_text(encoding="utf-8"))
-        validate_results(results)
-    except (json.JSONDecodeError, KeyError, TypeError, ValueError) as exc:
-        raise ValueError(
-            f"submission/blue_team/results.json 형식 또는 계산값이 올바르지 않습니다: {exc}"
-        ) from exc
-
-    trace_files = list((ROOT / "submission/red_team/traces").glob("*.jsonl"))
-    if not trace_files:
-        raise ValueError("submission/red_team/traces/에 증거 JSONL Trace를 하나 이상 넣으세요.")
 
 
 def is_number(value: object) -> bool:
@@ -103,12 +56,12 @@ def validate_rate_block(block: dict, minimum_attempts: int, rate_key: str) -> tu
     return attempts, successes
 
 
-def validate_results(results: dict) -> None:
+def validate_results(results: dict) -> set[str]:
     protocol = results["evaluation_protocol"]
     if protocol["model"] != "gemini-3.8-flash":
         raise ValueError("지정 모델을 사용해야 합니다.")
-    if protocol["temperature"] != 0 or protocol["max_steps"] != 6:
-        raise ValueError("temperature와 max_steps를 지정값으로 유지해야 합니다.")
+    if protocol["temperature"] != 0 or protocol["max_steps"] != 10:
+        raise ValueError("TEMPERATURE=0, MAX_STEPS=10을 유지해야 합니다.")
     runs_per_case = protocol["runs_per_case"]
     utility_runs = protocol["utility_runs_per_task"]
     if not isinstance(runs_per_case, int) or runs_per_case < 3:
@@ -122,8 +75,10 @@ def validate_results(results: dict) -> None:
     if not isinstance(findings, list) or len(findings) < 3:
         raise ValueError("필수 Finding 3개의 결과가 필요합니다.")
     finding_ids = {item["id"] for item in findings}
-    if not {"F01", "F02", "F03"}.issubset(finding_ids) or len(finding_ids) != len(findings):
+    if not set(REQUIRED_FINDINGS).issubset(finding_ids) or len(finding_ids) != len(findings):
         raise ValueError("Finding ID가 없거나 중복되었습니다.")
+    if not finding_ids.issubset(set(REQUIRED_FINDINGS + OPTIONAL_FINDINGS)):
+        raise ValueError("Finding ID는 F01~F05만 사용할 수 있습니다.")
 
     baseline_attempts = baseline_successes = 0
     defended_attempts = defended_successes = 0
@@ -174,6 +129,100 @@ def validate_results(results: dict) -> None:
         value = summary[key]
         if not is_number(value) or abs(float(value) - expected) > 0.11:
             raise ValueError(f"요약 지표가 원시 결과와 일치하지 않습니다: {key}")
+    return finding_ids
+
+
+def validate_jsonl(path: Path) -> None:
+    lines = [line for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+    if not lines:
+        raise ValueError(f"비어 있는 증거 파일입니다: {path.relative_to(ROOT)}")
+    for line_number, line in enumerate(lines, start=1):
+        try:
+            event = json.loads(line)
+        except json.JSONDecodeError as exc:
+            raise ValueError(
+                f"JSONL 형식이 올바르지 않습니다: {path.relative_to(ROOT)}:{line_number}"
+            ) from exc
+        if not isinstance(event, dict):
+            raise ValueError(
+                f"JSONL 각 줄은 JSON 객체여야 합니다: {path.relative_to(ROOT)}:{line_number}"
+            )
+
+
+def validate_attack_artifacts(finding_ids: set[str]) -> None:
+    attacks_dir = ROOT / "submission" / "attacks"
+    present_ids = {path.name for path in attacks_dir.glob("F[0-9][0-9]") if path.is_dir()}
+    if present_ids != finding_ids:
+        raise ValueError("공격 폴더와 results.json의 Finding ID가 일치해야 합니다.")
+
+    for finding_id in sorted(finding_ids):
+        attack_dir = attacks_dir / finding_id
+        reproduce = attack_dir / "reproduce.py"
+        if not reproduce.is_file():
+            raise ValueError(f"공격 재현 코드가 없습니다: submission/attacks/{finding_id}/reproduce.py")
+        source = reproduce.read_text(encoding="utf-8")
+        if SCAFFOLD_MARKER in source or "NotImplementedError" in source:
+            raise ValueError(f"공격 재현 코드를 완성하세요: submission/attacks/{finding_id}/reproduce.py")
+        for phase in ("baseline", "defended"):
+            evidence = attack_dir / "evidence" / f"{phase}.jsonl"
+            if not evidence.is_file():
+                raise ValueError(f"{phase} 증거 Trace가 없습니다: {evidence.relative_to(ROOT)}")
+            validate_jsonl(evidence)
+
+
+def validate_defense_manifest(manifest: dict, finding_ids: set[str]) -> None:
+    defenses = manifest["defenses"]
+    if not isinstance(defenses, list):
+        raise ValueError("defense_manifest.json의 defenses는 배열이어야 합니다.")
+    mapped_ids: set[str] = set()
+    defense_ids: set[str] = set()
+    for defense in defenses:
+        defense_id = defense["id"]
+        finding_id = defense["finding_id"]
+        if defense_id in defense_ids or finding_id in mapped_ids:
+            raise ValueError("Defense ID 또는 Finding 매핑이 중복되었습니다.")
+        if defense_id != "D" + finding_id[1:]:
+            raise ValueError(f"{finding_id}는 D{finding_id[1:]}와 연결해야 합니다.")
+        if not str(defense["security_invariant"]).strip():
+            raise ValueError(f"{defense_id}의 Security Invariant를 작성하세요.")
+        modified_files = defense["modified_files"]
+        if not isinstance(modified_files, list) or not modified_files:
+            raise ValueError(f"{defense_id}의 수정 파일을 하나 이상 기록하세요.")
+        for value in modified_files:
+            relative = Path(value)
+            if relative.is_absolute() or ".." in relative.parts:
+                raise ValueError(f"안전하지 않은 수정 파일 경로입니다: {value}")
+            target = ROOT / relative
+            if not target.is_file():
+                raise ValueError(f"매니페스트에 적힌 수정 파일이 없습니다: {value}")
+            if relative.parts and relative.parts[0] in {"submission", "environment", "traces"}:
+                raise ValueError(f"방어 코드는 실제 Agent 또는 테스트 코드에 적용해야 합니다: {value}")
+        defense_ids.add(defense_id)
+        mapped_ids.add(finding_id)
+    if mapped_ids != finding_ids:
+        raise ValueError("모든 Finding에 정확히 하나의 대응 방어가 필요합니다.")
+
+
+def ensure_required_results() -> None:
+    missing = [str(path) for path in REQUIRED_FILES if not (ROOT / path).is_file()]
+    if missing:
+        raise ValueError("필수 파일이 없습니다: " + ", ".join(missing))
+
+    try:
+        results = json.loads((ROOT / "submission/results.json").read_text(encoding="utf-8"))
+        finding_ids = validate_results(results)
+    except (json.JSONDecodeError, KeyError, TypeError, ValueError) as exc:
+        raise ValueError(f"submission/results.json 형식 또는 계산값이 올바르지 않습니다: {exc}") from exc
+
+    try:
+        manifest = json.loads(
+            (ROOT / "submission/defense_manifest.json").read_text(encoding="utf-8")
+        )
+        validate_defense_manifest(manifest, finding_ids)
+    except (json.JSONDecodeError, KeyError, TypeError, ValueError) as exc:
+        raise ValueError(f"submission/defense_manifest.json이 올바르지 않습니다: {exc}") from exc
+
+    validate_attack_artifacts(finding_ids)
 
 
 def should_include(path: Path) -> bool:
@@ -217,33 +266,31 @@ def run_public_tests() -> None:
         raise ValueError("Public Test가 실패했습니다. 오류를 수정한 뒤 다시 실행하세요.")
 
 
-def build_archive(files: list[Path], student_id: str, name: str) -> Path:
+def build_archive(files: list[Path]) -> Path:
     DIST_DIR.mkdir(exist_ok=True)
-    archive_path = DIST_DIR / f"정보보호론_{student_id}_{name}.zip"
-    root_name = f"정보보호론_{student_id}_{name}"
+    archive_path = DIST_DIR / "agent_security_submission.zip"
     with zipfile.ZipFile(archive_path, "w", compression=zipfile.ZIP_DEFLATED) as archive:
         for path in files:
             relative = path.relative_to(ROOT)
-            archive.write(path, Path(root_name) / relative)
+            archive.write(path, Path("agent_security_submission") / relative)
     return archive_path
 
 
 def main() -> int:
     try:
         run_public_tests()
-        print("[2/4] 학생 정보와 필수 제출물 검사")
-        student_id, name = read_student()
+        print("[2/4] 공격·방어 결과와 평가 지표 검사")
         ensure_required_results()
         print("[3/4] 제외 대상과 API Key 검사")
         files = collect_files()
         check_secrets(files)
         print("[4/4] 제출 ZIP 생성")
-        archive_path = build_archive(files, student_id, name)
+        archive_path = build_archive(files)
     except (OSError, ValueError) as exc:
         print(f"제출 ZIP 생성 실패: {exc}", file=sys.stderr)
         return 1
     print(f"완료: {archive_path.relative_to(ROOT)}")
-    print("이 ZIP과 최종 PDF를 LMS/eCampus에 제출하세요.")
+    print("ZIP을 이름_학번_코드.zip으로 바꾼 뒤 이름_학번_최종보고서.pdf와 함께 LMS에 제출하세요.")
     return 0
 
 
