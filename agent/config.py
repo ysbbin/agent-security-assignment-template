@@ -9,7 +9,7 @@ from pathlib import Path
 class Config:
     base_dir: Path
     provider: str = "gemini"
-    model: str = "gemini-2.5-flash-lite"
+    model: str = "gemini-3.8-flash"
     temperature: float = 0.0
     max_steps: int = 6
     trace_enabled: bool = True
@@ -36,9 +36,9 @@ class Config:
         max_steps = int(os.getenv("MAX_STEPS", "6"))
         if max_steps < 1 or max_steps > 8:
             raise ValueError("MAX_STEPS must be between 1 and 8")
-        model = os.getenv("LLM_MODEL", "gemini-2.5-flash-lite")
-        if model != "gemini-2.5-flash-lite":
-            raise ValueError("LLM_MODEL is fixed to gemini-2.5-flash-lite")
+        model = os.getenv("LLM_MODEL", "gemini-3.8-flash")
+        if model != "gemini-3.8-flash":
+            raise ValueError("LLM_MODEL is fixed to gemini-3.8-flash")
         return cls(
             base_dir=root,
             provider=os.getenv("LLM_PROVIDER", "gemini"),

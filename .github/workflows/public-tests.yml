@@ -13,7 +13,7 @@ jobs:
     timeout-minutes: 10
     env:
       LLM_PROVIDER: scripted
-      LLM_MODEL: gemini-2.5-flash-lite
+      LLM_MODEL: gemini-3.8-flash
       TEMPERATURE: "0"
       MAX_STEPS: "6"
       TRACE_ENABLED: "true"

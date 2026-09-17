@@ -57,18 +57,18 @@ py -3.11 --version
 
 이번 학기 배포본은 다음 GitHub Release로 고정한다.
 
-- [Agent Security Assignment v1.0.0](https://github.com/ysbbin/agent-security-assignment-template/releases/tag/assignment-v1.0.0)
-- [과제 ZIP 바로 다운로드](https://github.com/ysbbin/agent-security-assignment-template/archive/refs/tags/assignment-v1.0.0.zip)
+- [Agent Security Assignment v1.1.0](https://github.com/ysbbin/agent-security-assignment-template/releases/tag/assignment-v1.1.0)
+- [과제 ZIP 바로 다운로드](https://github.com/ysbbin/agent-security-assignment-template/archive/refs/tags/assignment-v1.1.0.zip)
 
 다운로드 순서:
 
-1. 위 **Agent Security Assignment v1.0.0** 링크를 연다.
+1. 위 **Agent Security Assignment v1.1.0** 링크를 연다.
 2. 페이지 아래 **Assets**를 펼친다.
 3. **Source code (zip)**을 선택해 다운로드한다.
 4. 다운로드한 ZIP의 압축을 완전히 푼다.
-5. 압축을 푼 `agent-security-assignment-template-assignment-v1.0.0` 폴더를 VS Code 등 편집기로 연다.
+5. 압축을 푼 `agent-security-assignment-template-assignment-v1.1.0` 폴더를 VS Code 등 편집기로 연다.
 
-ZIP 내부를 직접 열어 작업하지 않는다. 반드시 먼저 압축을 풀어야 가상환경, 파일 수정과 실행 결과 저장이 정상 동작한다. 모든 학생은 동일한 채점 환경을 위해 위 `assignment-v1.0.0` 배포본으로 시작한다.
+ZIP 내부를 직접 열어 작업하지 않는다. 반드시 먼저 압축을 풀어야 가상환경, 파일 수정과 실행 결과 저장이 정상 동작한다. 모든 학생은 동일한 채점 환경을 위해 위 `assignment-v1.1.0` 배포본으로 시작한다.
 
 ## 4. 본인 정보 작성
 
@@ -125,7 +125,7 @@ API 없이도 설치 확인과 공개 테스트는 실행할 수 있다. 실제 
 
 ```dotenv
 LLM_PROVIDER=gemini
-LLM_MODEL=gemini-2.5-flash-lite
+LLM_MODEL=gemini-3.8-flash
 GEMINI_API_KEY=본인의_API_KEY
 TEMPERATURE=0
 MAX_STEPS=6
@@ -140,6 +140,39 @@ TRACE_ENABLED=true
 - Key가 노출되었다면 즉시 Google AI Studio에서 폐기하고 새 Key를 발급한다.
 
 최종 제출 ZIP은 `package_submission.py`가 `.env`를 자동으로 제외하고 API Key 형태가 다른 제출 파일에 남아 있는지도 검사한다.
+
+### 지정 모델과 무료 사용 범위
+
+본 과제의 지정 모델은 `gemini-3.8-flash`다. 2026년 9월 기준 Google 공식 문서에서 Stable 모델이며 Function Calling을 지원한다.
+
+- [Google Gemini 모델 목록](https://ai.google.dev/gemini-api/docs/models)
+- [Gemini 3.8 Flash 모델 정보](https://ai.google.dev/gemini-api/docs/models/gemini-3.8-flash)
+- [Gemini API 가격 및 Free Tier](https://ai.google.dev/gemini-api/docs/pricing)
+- [Gemini API Rate Limits](https://ai.google.dev/gemini-api/docs/rate-limits)
+
+Google은 Free Tier를 제공하지만 사용 가능 지역, 계정 상태, 분당·일일 한도와 제공 모델은 변경될 수 있다. 결제 수단 등록이나 유료 전환은 과제의 필수 조건이 아니다. 무료 한도를 초과했거나 지정 모델이 보이지 않으면 다른 모델로 임의 변경하지 말고, API가 필요 없는 `--provider scripted` 테스트를 사용한 뒤 담당 교수 또는 조교에게 문의한다.
+
+### GPT 및 다른 생성형 AI 보조 도구 사용
+
+ChatGPT, Codex, Gemini 등 생성형 AI는 환경 설정 확인, 코드 구조 설명, Trace 해석과 방어 아이디어 검토를 위한 **보조 도구**로 사용할 수 있다. AI가 만든 공격·분석·코드를 그대로 제출하지 말고, 학생 본인이 실행 결과와 Root Cause를 직접 검증해야 한다. 사용했다면 보고서 말미에 서비스명, 사용 목적과 검증 방법을 간단히 기록한다.
+
+보안 관련 요청을 보낼 때는 다음 범위를 먼저 명확히 설명한다.
+
+```text
+이 요청은 대학 정보보호론 수업의 승인된 로컬 보안 실습입니다.
+대상은 과제로 제공된 Mock Email/File/Calendar/Memory와 로컬 JSON 상태뿐입니다.
+실제 시스템, 외부 계정, 개인정보 또는 학교 서비스에는 접근하지 않습니다.
+제공된 코드와 JSONL Trace의 방어적 분석, 테스트와 개선 방법만 도와주세요.
+```
+
+다음 원칙을 지킨다.
+
+- `.env`, API Key, 실제 개인정보와 다른 학생의 결과물을 AI 서비스에 입력하지 않는다.
+- 실제 사이트·계정·네트워크를 공격하는 방법이나 과제 범위를 벗어난 실행을 요청하지 않는다.
+- 서비스가 경고·거절·제한을 표시하면 표현을 숨기거나 Jailbreak로 안전장치를 우회하지 않는다. 로컬 Mock 실습 범위를 정확히 설명하고, 그래도 제한되면 직접 분석하거나 교수·조교에게 문의한다.
+- 서비스가 계정, 연령, 지역, 조직 또는 신원 확인을 요구하면 본인 계정과 사실인 정보로 해당 서비스의 공식 절차만 따른다. 다른 사람의 계정·신분이나 허위 정보를 사용하지 않는다.
+- OpenAI의 [Trusted Access for Cyber](https://developers.openai.com/codex/cyber-safety/)와 별도 신원 확인은 고급 승인형 사이버 모델 접근 절차다. 본 과제를 위해 신청하거나 승인받을 필요는 없으며, 신청 또는 신원 확인만으로 고급 모델 접근이 보장되는 것도 아니다.
+- 어떤 AI 서비스를 사용하더라도 해당 서비스의 이용약관과 안전 정책을 따른다.
 
 ## 7. 최초 상태 초기화
 
