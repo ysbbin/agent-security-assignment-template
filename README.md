@@ -63,15 +63,15 @@ python --version
 
 이번 학기 배포본은 다음 GitHub Release로 고정한다.
 
-- [Agent Security Assignment v1.3.0](https://github.com/ysbbin/agent-security-assignment-template/releases/tag/assignment-v1.3.0)
-- [과제 ZIP 바로 다운로드](https://github.com/ysbbin/agent-security-assignment-template/archive/refs/tags/assignment-v1.3.0.zip)
+- [Agent Security Assignment v1.3.1](https://github.com/ysbbin/agent-security-assignment-template/releases/tag/assignment-v1.3.1)
+- [과제 ZIP 바로 다운로드](https://github.com/ysbbin/agent-security-assignment-template/archive/refs/tags/assignment-v1.3.1.zip)
 
 다운로드 순서:
 
 1. 위 Release 링크를 연다.
 2. 페이지 아래 **Assets**에서 **Source code (zip)**을 다운로드한다.
 3. 다운로드한 ZIP의 압축을 완전히 푼다.
-4. `agent-security-assignment-template-assignment-v1.3.0` 폴더를 편집기로 연다.
+4. `agent-security-assignment-template-assignment-v1.3.1` 폴더를 편집기로 연다.
 5. 방어 전 원본을 다시 확인할 수 있도록 다운로드 ZIP은 과제가 끝날 때까지 보관한다.
 
 ZIP 내부를 직접 열어 작업하지 않는다. 반드시 먼저 압축을 풀어야 가상환경, 파일 수정과 실행 결과 저장이 정상 동작한다.
@@ -489,30 +489,24 @@ ZIP을 수동으로 다시 압축하거나 일부 파일을 삭제하지 않는�
 
 1. **제목 페이지 — 1페이지**
    - 과제명, 이름, 학번
-2. **과제 개요 및 간단한 목차 — 1~2페이지**
+2. **과제 개요 및 간단한 목차 — 1페이지**
    - Red Team과 Blue Team 목표, 수행 범위, 발표 흐름
-   - Release, Python, 모델, `TEMPERATURE=0`, `MAX_STEPS=10`
 3. **Agent 구조와 공격 표면 분석 — 1~2페이지**
-   - 입력 → Context → LLM → Tool → Mock 상태 → Trace 흐름
-   - 주요 자산, 권한과 Trust Boundary
-4. **실험 방법 — 1~2페이지**
-   - 초기화, 반복 횟수, 고정 변수, 공격 성공 판정 기준
-   - ASR과 Task Utility 계산 방법
-5. **공격 사례 분석 — 사례당 2페이지**
+4. **공격 사례 분석 — 사례당 2페이지**
    - 첫 페이지: 공격 표면, 전제조건, 정상 기대 동작, Payload와 재현 절차
    - 두 번째 페이지: 핵심 Trace·상태 변화, Security Effect, Root Cause와 OWASP 매핑 근거
    - 기본 F01~F03은 총 6페이지, F04·F05까지 제출하면 최대 10페이지
-6. **방어 기법 — 공격-방어 쌍당 1~2페이지**
+5. **방어 기법 — 공격-방어 쌍당 1~2페이지**
    - Security Invariant와 방어 설계
    - 실제 수정한 파일·함수와 핵심 코드
    - 원본 및 변형 공격 차단 결과, 우회 가능성과 한계
-7. **통합 정량 평가 — 1~2페이지**
+6. **통합 정량 평가 — 1~2페이지**
    - Finding별 Baseline/Defended ASR 표 또는 그래프
    - Overall ASR, ASR Reduction, Baseline/Defended Task Utility, Utility Change
    - 공격 차단과 정상 기능 유지 사이의 Trade-off, 오탐·미탐
-8. **결론 및 한계 — 1페이지**
+7. **결론 및 한계 — 1페이지**
    - 효과적이었던 방어, 남은 위험, 개선 방향과 배운 점
-9. **참고자료 및 AI 활용 내역 — 필요 시 1페이지**
+8. **참고자료 및 AI 활용 내역 — 필요 시 1페이지**
    - OWASP 자료와 기타 출처
    - 생성형 AI를 사용했다면 서비스명, 사용 목적, 결과 검증 방법
 
