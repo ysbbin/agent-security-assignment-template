@@ -15,24 +15,35 @@
 
 최종 응답 문장만으로 취약점 재현을 인정하지 않는다. 실제 Tool Call과 Mock 상태 변화를 공격 재현 코드와 JSONL Trace로 입증해야 한다. 동일한 Root Cause를 Payload만 바꿔 반복한 결과는 별도 취약점으로 계산하지 않는다.
 
-### 평가 기준
+### 교과목 반영 배점
+
+본 과제는 교과목 총점 100점 중 20점으로 반영한다.
+
+| 평가 항목 | 점수 |
+|---|---:|
+| 중간보고서 | 5점 |
+| 최종보고서 및 코드 | 10점 |
+| 동영상 발표 | 5점 |
+| **합계** | **20점** |
+
+### 최종보고서 및 코드 세부 평가
 
 | 영역 | 세부 기준 | 점수 |
 |---|---|---:|
-| Red Team | 서로 다른 Root Cause의 공격 지점 3개 분석·재현 | 45 |
-| Blue Team | 각 공격에 대응하는 방어 설계·구현 | 35 |
-| 정량 평가 및 최종 발표자료 | ASR·Task Utility 비교, 재현성, 발표자료 품질 | 20 |
-| **기본 점수 합계** |  | **100** |
+| Red Team | 서로 다른 Root Cause의 공격 지점 3개 분석·재현 | 4.5점 |
+| Blue Team | 각 공격에 대응하는 방어 설계·구현 | 3.5점 |
+| 정량 평가 및 최종 발표자료 | ASR·Task Utility 비교, 재현성, 발표자료 품질 | 2점 |
+| **합계** |  | **10점** |
 
-Red Team 45점은 공격별 15점으로 평가한다. 공격 지점·전제조건 2점, 재현 절차·Payload 3점, Trace·상태 변화·보안 영향 4점, Root Cause 3점, OWASP 매핑·근거 3점이다.
+Red Team은 공격 지점·전제조건, 재현 절차·Payload, Trace·상태 변화·보안 영향, Root Cause와 OWASP 매핑 근거를 종합하여 평가한다.
 
-Blue Team 35점은 공격-방어 매핑과 Security Invariant 9점, Root Cause를 해결하는 코드 구현 15점, 변형 공격 검증과 한계 분석 6점, 최소 권한·코드 품질 5점이다.
+Blue Team은 공격-방어 매핑과 Security Invariant, Root Cause를 해결하는 코드 구현, 변형 공격 검증·한계 분석, 최소 권한과 코드 품질을 종합하여 평가한다.
 
-정량 평가 및 발표자료 20점은 실험 통제·재현성 4점, ASR 계산·증거 6점, Task Utility 측정·해석 5점, 최종 발표자료 완성도 5점이다.
+정량 평가 및 발표자료는 실험 통제·재현성, ASR 계산·증거, Task Utility 측정·해석과 최종 발표자료 완성도를 평가한다.
 
 ### 가산점
 
-필수 3개를 초과한 **추가 공격 지점과 그에 대응하는 방어 기법을 하나의 완성된 쌍으로 제출할 때마다 5점**을 부여한다. 최대 2쌍까지 인정하므로 가산점 포함 최고점은 110점이다.
+필수 3개를 초과한 **추가 공격 지점과 그에 대응하는 방어 기법을 하나의 완성된 쌍으로 제출할 때마다 최종보고서 평가에서 0.5점의 가산점**을 부여한다. 최대 2쌍까지 인정한다. 가산점은 최종보고서의 다른 감점을 보완할 수 있지만 최종보고서 및 코드 점수는 10점, 과제 총점은 20점을 초과하지 않는다.
 
 - 추가 공격만 찾거나 방어 설명만 제출하면 가산점을 부여하지 않는다.
 - 필수 공격과 Root Cause가 달라야 하며, Payload 문구만 바꾼 사례는 인정하지 않는다.
@@ -49,7 +60,7 @@ Blue Team 35점은 공격-방어 매핑과 Security Invariant 9점, Root Cause�
 - 실제 Agent 실험에 사용할 Gemini API Key
 - PowerPoint, Google Slides, Keynote 등 PPT 작성 및 PDF 내보내기가 가능한 프로그램
 
-GitHub 계정과 Git 프로그램은 필요하지 않다. 웹 브라우저로 배포 ZIP을 다운로드하고, 완성된 결과는 LMS에 파일로 제출한다.
+GitHub 계정과 Git 프로그램은 필요하지 않다. 웹 브라우저로 배포 ZIP을 다운로드하고, 완성된 결과는 담당 조교 이메일 `soobin@soongsil.ac.kr`로 제출한다.
 
 Python 버전을 확인한다.
 
@@ -63,15 +74,15 @@ python --version
 
 이번 학기 배포본은 다음 GitHub Release로 고정한다.
 
-- [Agent Security Assignment v1.4.1](https://github.com/ysbbin/agent-security-assignment-template/releases/tag/assignment-v1.4.1)
-- [과제 ZIP 바로 다운로드](https://github.com/ysbbin/agent-security-assignment-template/archive/refs/tags/assignment-v1.4.1.zip)
+- [Agent Security Assignment v1.5.0](https://github.com/ysbbin/agent-security-assignment-template/releases/tag/assignment-v1.5.0)
+- [과제 ZIP 바로 다운로드](https://github.com/ysbbin/agent-security-assignment-template/archive/refs/tags/assignment-v1.5.0.zip)
 
 다운로드 순서:
 
 1. 위 Release 링크를 연다.
 2. 페이지 아래 **Assets**에서 **Source code (zip)**을 다운로드한다.
 3. 다운로드한 ZIP의 압축을 완전히 푼다.
-4. `agent-security-assignment-template-assignment-v1.4.1` 폴더를 편집기로 연다.
+4. `agent-security-assignment-template-assignment-v1.5.0` 폴더를 편집기로 연다.
 5. 방어 전 원본을 다시 확인할 수 있도록 다운로드 ZIP은 과제가 끝날 때까지 보관한다.
 
 ZIP 내부를 직접 열어 작업하지 않는다. 반드시 먼저 압축을 풀어야 가상환경, 파일 수정과 실행 결과 저장이 정상 동작한다.
@@ -460,9 +471,27 @@ py -3.11 package_submission.py
 
 ZIP을 수동으로 다시 압축하거나 일부 파일을 삭제하지 않는다. 패키징 오류가 나오면 메시지에 표시된 파일을 수정한 뒤 명령을 다시 실행한다.
 
-## 16. 최종 발표자료 작성과 LMS 제출
+## 16. 중간보고서·최종보고서·동영상 발표 및 이메일 제출
 
-최종 보고서는 A4 문서가 아니라 **발표용 PPT**로 만든다. PowerPoint·Google Slides·Keynote 등으로 발표자료를 작성한 뒤 **PDF로 내보내기**한다. LMS에는 PPT 원본이 아니라 내보낸 PDF와 코드 ZIP, 총 2개 파일을 제출한다.
+### 중간보고서 — 5점
+
+중간보고서는 PDF로 작성하며 다음 내용을 포함한다.
+
+1. 과제 목적과 현재 진행 상황
+2. 환경 설정 및 Agent 정상 실행 결과
+3. Agent 구조, 주요 자산과 Trust Boundary 분석
+4. 현재까지 확인한 공격 후보와 관련 Trace 또는 코드 근거
+5. 남은 Red Team·Blue Team 수행 계획
+
+중간보고서 파일명은 다음 형식으로 작성한다.
+
+```text
+이름_학번_중간보고서.pdf
+```
+
+### 최종보고서 및 코드 — 10점
+
+최종 보고서는 A4 문서가 아니라 **발표용 PPT**로 만든다. PowerPoint·Google Slides·Keynote 등으로 발표자료를 작성한 뒤 **PDF로 내보내기**한다. 코드 제출 ZIP은 `package_submission.py`로 생성한다.
 
 ### 발표자료 구성
 
@@ -491,26 +520,58 @@ ZIP을 수동으로 다시 압축하거나 일부 파일을 삭제하지 않는�
 
 발표자료에는 읽을 수 있는 크기의 핵심 Payload, Trace Event, 코드 변경과 결과 표를 넣는다. 긴 전체 코드는 붙여 넣지 말고 핵심 부분만 설명하며, 전체 공격·방어 코드는 제출 ZIP에서 재현 가능해야 한다.
 
-### LMS 최종 제출 파일
+### 동영상 발표 — 5점
 
-LMS에는 다음 두 파일만 제출한다.
+최종 발표자료를 화면에 띄우고 본인의 음성으로 프로젝트의 핵심 수행 결과를 설명하는 발표 동영상을 제작한다. 권장 분량은 10분 내외이며 얼굴 촬영은 필수가 아니다.
+
+동영상에는 다음 내용을 포함한다.
+
+- 과제 목표와 Agent 구조
+- 주요 공격 사례와 OWASP 매핑
+- 적용한 방어 기법과 핵심 코드
+- 방어 전·후 ASR 및 Task Utility 비교
+- 남은 한계와 배운 점
+
+발표 동영상 파일명은 다음 형식을 사용한다.
+
+```text
+이름_학번_발표영상.mp4
+```
+
+### 제출 형식 및 마감
+
+| 제출물 | 마감 |
+|---|---|
+| 중간보고서 PDF | 2026년 10월 21일(수) 오후 11시 |
+| 코드 ZIP, 최종보고서 PDF, 발표 동영상 | 2026년 11월 25일(수) 오후 11시 |
+
+모든 제출물은 LMS가 아니라 담당 조교 이메일 [soobin@soongsil.ac.kr](mailto:soobin@soongsil.ac.kr)로 제출한다. 마감 시각은 이메일 수신 시각을 기준으로 한다.
+
+중간보고서 이메일 제목:
+
+```text
+[정보보호론 중간보고서] 이름 학번
+```
+
+최종 제출 이메일 제목:
+
+```text
+[정보보호론 최종제출] 이름 학번
+```
+
+최종 제출 파일:
 
 ```text
 이름_학번_코드.zip
 이름_학번_최종보고서.pdf
-```
-
-예:
-
-```text
-홍길동_20261234_코드.zip
-홍길동_20261234_최종보고서.pdf
+이름_학번_발표영상.mp4
 ```
 
 - 코드 ZIP은 반드시 `package_submission.py`로 생성한 파일의 이름만 변경한다.
-- 최종보고서 PDF는 PPT를 완성한 뒤 PDF로 내보낸 파일이어야 한다.
-- PPT 원본, 별도 Markdown 보고서, 시연 영상은 제출하지 않는다.
-- LMS에 표시되는 이름과 학번, 두 제출 파일의 이름을 일치시킨다.
+- 최종보고서 PDF는 PPT를 완성한 뒤 PDF로 내보낸다. PPT 원본은 제출하지 않는다.
+- 동영상 용량이 이메일 첨부 한도를 초과하면 Google Drive 또는 OneDrive 등에 업로드하고, 담당 조교가 로그인 요청 없이 열 수 있는 공유 링크를 이메일 본문에 적는다.
+- 이메일 본문에 이름, 학번과 첨부·공유한 파일 목록을 적는다.
+- `.env`, API Key, 실제 개인정보는 이메일이나 제출 파일에 포함하지 않는다.
 
 ## 17. 자주 발생하는 문제
 

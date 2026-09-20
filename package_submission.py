@@ -252,7 +252,7 @@ def main() -> int:
         print(f"제출 ZIP 생성 실패: {exc}", file=sys.stderr)
         return 1
     print(f"완료: {archive_path.relative_to(ROOT)}")
-    print("ZIP을 이름_학번_코드.zip으로 바꾼 뒤 이름_학번_최종보고서.pdf와 함께 LMS에 제출하세요.")
+    print("ZIP을 이름_학번_코드.zip으로 바꾼 뒤 최종보고서 PDF 및 발표 동영상과 함께 담당 조교 이메일로 제출하세요.")
     return 0
 
 
