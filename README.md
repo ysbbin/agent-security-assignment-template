@@ -22,11 +22,11 @@
 | 평가 항목 | 점수 |
 |---|---:|
 | 중간보고서 | 5점 |
-| 최종보고서 및 코드 | 10점 |
+| 최종보고서 | 10점 |
 | 동영상 발표 | 5점 |
 | **합계** | **20점** |
 
-### 최종보고서 및 코드 세부 평가
+### 최종보고서 세부 평가
 
 | 영역 | 세부 기준 | 점수 |
 |---|---|---:|
@@ -43,7 +43,7 @@ Blue Team은 공격-방어 매핑과 Security Invariant, Root Cause를 해결하
 
 ### 가산점
 
-필수 3개를 초과한 **추가 공격 지점과 그에 대응하는 방어 기법을 하나의 완성된 쌍으로 제출할 때마다 최종보고서 평가에서 0.5점의 가산점**을 부여한다. 최대 2쌍까지 인정한다. 가산점은 최종보고서의 다른 감점을 보완할 수 있지만 최종보고서 및 코드 점수는 10점, 과제 총점은 20점을 초과하지 않는다.
+필수 3개를 초과한 **추가 공격 지점과 그에 대응하는 방어 기법을 하나의 완성된 쌍으로 제출할 때마다 최종보고서 평가에서 0.5점의 가산점**을 부여한다. 최대 2쌍까지 인정한다. 가산점은 최종보고서의 다른 감점을 보완할 수 있지만 최종보고서 점수는 10점, 과제 총점은 20점을 초과하지 않는다.
 
 - 추가 공격만 찾거나 방어 설명만 제출하면 가산점을 부여하지 않는다.
 - 필수 공격과 Root Cause가 달라야 하며, Payload 문구만 바꾼 사례는 인정하지 않는다.
@@ -74,15 +74,15 @@ python --version
 
 이번 학기 배포본은 다음 GitHub Release로 고정한다.
 
-- [Agent Security Assignment v1.5.0](https://github.com/ysbbin/agent-security-assignment-template/releases/tag/assignment-v1.5.0)
-- [과제 ZIP 바로 다운로드](https://github.com/ysbbin/agent-security-assignment-template/archive/refs/tags/assignment-v1.5.0.zip)
+- [Agent Security Assignment v1.5.1](https://github.com/ysbbin/agent-security-assignment-template/releases/tag/assignment-v1.5.1)
+- [과제 ZIP 바로 다운로드](https://github.com/ysbbin/agent-security-assignment-template/archive/refs/tags/assignment-v1.5.1.zip)
 
 다운로드 순서:
 
 1. 위 Release 링크를 연다.
 2. 페이지 아래 **Assets**에서 **Source code (zip)**을 다운로드한다.
 3. 다운로드한 ZIP의 압축을 완전히 푼다.
-4. `agent-security-assignment-template-assignment-v1.5.0` 폴더를 편집기로 연다.
+4. `agent-security-assignment-template-assignment-v1.5.1` 폴더를 편집기로 연다.
 5. 방어 전 원본을 다시 확인할 수 있도록 다운로드 ZIP은 과제가 끝날 때까지 보관한다.
 
 ZIP 내부를 직접 열어 작업하지 않는다. 반드시 먼저 압축을 풀어야 가상환경, 파일 수정과 실행 결과 저장이 정상 동작한다.
@@ -489,7 +489,7 @@ ZIP을 수동으로 다시 압축하거나 일부 파일을 삭제하지 않는�
 이름_학번_중간보고서.pdf
 ```
 
-### 최종보고서 및 코드 — 10점
+### 최종보고서 — 10점
 
 최종 보고서는 A4 문서가 아니라 **발표용 PPT**로 만든다. PowerPoint·Google Slides·Keynote 등으로 발표자료를 작성한 뒤 **PDF로 내보내기**한다. 코드 제출 ZIP은 `package_submission.py`로 생성한다.
 
