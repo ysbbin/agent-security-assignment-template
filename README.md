@@ -80,15 +80,15 @@ python --version
 
 이번 학기 배포본은 다음 GitHub Release로 고정한다.
 
-- [Agent Security Assignment v1.5.2](https://github.com/ysbbin/agent-security-assignment-template/releases/tag/assignment-v1.5.2)
-- [과제 ZIP 바로 다운로드](https://github.com/ysbbin/agent-security-assignment-template/archive/refs/tags/assignment-v1.5.2.zip)
+- [Agent Security Assignment v1.5.3](https://github.com/ysbbin/agent-security-assignment-template/releases/tag/assignment-v1.5.3)
+- [과제 ZIP 바로 다운로드](https://github.com/ysbbin/agent-security-assignment-template/archive/refs/tags/assignment-v1.5.3.zip)
 
 다운로드 순서:
 
 1. 위 Release 링크를 연다.
 2. 페이지 아래 **Assets**에서 **Source code (zip)**을 다운로드한다.
 3. 다운로드한 ZIP의 압축을 완전히 푼다.
-4. `agent-security-assignment-template-assignment-v1.5.2` 폴더를 편집기로 연다.
+4. `agent-security-assignment-template-assignment-v1.5.3` 폴더를 편집기로 연다.
 5. 방어 전 원본을 다시 확인할 수 있도록 다운로드 ZIP은 과제가 끝날 때까지 보관한다.
 
 ZIP 내부를 직접 열어 작업하지 않는다. 반드시 먼저 압축을 풀어야 가상환경, 파일 수정과 실행 결과 저장이 정상 동작한다.
@@ -581,7 +581,7 @@ ZIP을 수동으로 다시 압축하거나 일부 파일을 삭제하지 않는�
 
 - 코드 ZIP은 반드시 `package_submission.py`로 생성한 파일의 이름만 변경한다.
 - 최종보고서 PDF는 PPT를 완성한 뒤 PDF로 내보낸다. PPT 원본은 제출하지 않는다.
-- 동영상 용량이 이메일 첨부 한도를 초과하면 Google Drive 또는 OneDrive 등에 업로드하고, 담당 조교가 로그인 요청 없이 열 수 있는 공유 링크를 이메일 본문에 적는다.
+- 동영상 용량이 이메일 첨부 한도를 초과하면 Google Drive·OneDrive 등에 업로드하거나 YouTube에 업로드한 뒤 **공개(Public)**로 설정하고, 영상 링크를 이메일 본문에 적는다. 제출 전 담당 조교가 로그인이나 별도의 권한 요청 없이 영상을 재생할 수 있는지 반드시 확인한다.
 - 이메일 본문에 이름, 학번과 첨부·공유한 파일 목록을 적는다.
 - `.env`, API Key, 실제 개인정보는 이메일이나 제출 파일에 포함하지 않는다.
 
