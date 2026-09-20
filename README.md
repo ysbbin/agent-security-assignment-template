@@ -26,6 +26,12 @@
 | 동영상 발표 | 5점 |
 | **합계** | **20점** |
 
+### 보고서별 수행 범위
+
+- **중간보고서:** 중간 제출 시점까지 수행한 **Red Team 분석과 공격 재현 결과**를 작성한다.
+- **최종보고서:** 완성한 **Red Team 공격 분석과 Blue Team 방어 구현·평가 결과를 모두** 작성한다.
+- 중간보고서에서 찾지 못했거나 중간보고서 제출 후 새롭게 발견한 취약점을 최종보고서에 추가할 수 있다. 최종보고서는 중간보고서의 내용에 제한되지 않으며, 최종 제출 시점의 완성된 결과를 기준으로 평가한다.
+
 ### 최종보고서 세부 평가
 
 | 영역 | 세부 기준 | 점수 |
@@ -74,15 +80,15 @@ python --version
 
 이번 학기 배포본은 다음 GitHub Release로 고정한다.
 
-- [Agent Security Assignment v1.5.1](https://github.com/ysbbin/agent-security-assignment-template/releases/tag/assignment-v1.5.1)
-- [과제 ZIP 바로 다운로드](https://github.com/ysbbin/agent-security-assignment-template/archive/refs/tags/assignment-v1.5.1.zip)
+- [Agent Security Assignment v1.5.2](https://github.com/ysbbin/agent-security-assignment-template/releases/tag/assignment-v1.5.2)
+- [과제 ZIP 바로 다운로드](https://github.com/ysbbin/agent-security-assignment-template/archive/refs/tags/assignment-v1.5.2.zip)
 
 다운로드 순서:
 
 1. 위 Release 링크를 연다.
 2. 페이지 아래 **Assets**에서 **Source code (zip)**을 다운로드한다.
 3. 다운로드한 ZIP의 압축을 완전히 푼다.
-4. `agent-security-assignment-template-assignment-v1.5.1` 폴더를 편집기로 연다.
+4. `agent-security-assignment-template-assignment-v1.5.2` 폴더를 편집기로 연다.
 5. 방어 전 원본을 다시 확인할 수 있도록 다운로드 ZIP은 과제가 끝날 때까지 보관한다.
 
 ZIP 내부를 직접 열어 작업하지 않는다. 반드시 먼저 압축을 풀어야 가상환경, 파일 수정과 실행 결과 저장이 정상 동작한다.
@@ -475,13 +481,19 @@ ZIP을 수동으로 다시 압축하거나 일부 파일을 삭제하지 않는�
 
 ### 중간보고서 — 5점
 
-중간보고서는 PDF로 작성하며 다음 내용을 포함한다.
+중간보고서는 **중간 제출 시점까지 수행한 Red Team 분석과 공격 재현 결과**를 정리한다. PowerPoint·Google Slides·Keynote 등으로 **자유 형식의 PPT 발표자료를 최대 10페이지**로 작성한 뒤 PDF로 내보내 제출한다. PPT 원본은 제출하지 않는다.
+
+다음 내용을 중심으로 구성한다.
 
 1. 과제 목적과 현재 진행 상황
 2. 환경 설정 및 Agent 정상 실행 결과
 3. Agent 구조, 주요 자산과 Trust Boundary 분석
-4. 현재까지 확인한 공격 후보와 관련 Trace 또는 코드 근거
-5. 남은 Red Team·Blue Team 수행 계획
+4. 현재까지 발견한 공격 사례 또는 공격 후보
+5. 공격별 재현 절차, 핵심 Trace·상태 변화와 코드 근거
+6. Root Cause와 OWASP 매핑 분석
+7. 남은 Red Team·Blue Team 수행 계획
+
+중간보고서에서 찾지 못했거나 제출 후 새롭게 발견한 취약점은 최종보고서에 추가할 수 있다. 중간보고서에 포함한 취약점만 최종 과제로 인정되는 것은 아니며, 최종 제출 시점까지 필수 공격·방어 요구사항을 완성하면 된다.
 
 중간보고서 파일명은 다음 형식으로 작성한다.
 
@@ -491,7 +503,7 @@ ZIP을 수동으로 다시 압축하거나 일부 파일을 삭제하지 않는�
 
 ### 최종보고서 — 10점
 
-최종 보고서는 A4 문서가 아니라 **발표용 PPT**로 만든다. PowerPoint·Google Slides·Keynote 등으로 발표자료를 작성한 뒤 **PDF로 내보내기**한다. 코드 제출 ZIP은 `package_submission.py`로 생성한다.
+최종보고서에는 **Red Team 공격 분석과 Blue Team 방어 구현·평가 결과를 모두** 작성한다. A4 문서가 아니라 **발표용 PPT**로 만들고, PowerPoint·Google Slides·Keynote 등으로 발표자료를 작성한 뒤 **PDF로 내보내기**한다. 코드 제출 ZIP은 `package_submission.py`로 생성한다.
 
 ### 발표자료 구성
 
